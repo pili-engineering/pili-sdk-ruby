@@ -19,19 +19,34 @@ module Pili
         base64_url_encode(digest(secret, bytes))
       end
 
-      def generate_query_string(body)
-        body = body.to_json if body.is_a?(Hash)
-        return body
-      end
-
       def generate_signature(options = {})
-        url, body = options[:url], options[:body]
+        method        = options[:method]
+        url           = options[:url]
+        content_type  = options[:content_type]
+        body          = options[:body]
+
         uri = URI.parse(url)
-        signature = uri.path
+
+        signature = "#{method} #{uri.path}"
+
         query_string = uri.query
-        signature += '?' + query_string if !query_string.nil? && !query_string.empty?
-        signature += "\n"
-        signature += generate_query_string(body) if body.is_a?(Hash)
+
+        if !query_string.nil? && !query_string.empty?
+          signature += '?' + query_string
+        end
+
+        signature += "\nHost: #{uri.host}"
+
+        if !content_type.nil? && !content_type.empty? && content_type != "application/octet-stream"
+          signature += "\nContent-Type: #{content_type}"
+        end
+
+        signature += "\n\n"
+
+        if body.is_a?(Hash)
+          signature += body.to_json
+        end
+
         return signature
       end
 
