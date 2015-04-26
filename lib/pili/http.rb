@@ -42,6 +42,20 @@ module Pili
       end
 
 
+      def api_delete(url)
+        signature_options = {
+          :url => url,
+          :method => "DELETE"
+        }
+
+        encoded_sign = Auth.sign(Config.secret_key, Auth.generate_signature(signature_options))
+
+        headers = { "Authorization" => "Qiniu #{Config.access_key}:#{encoded_sign}" }
+
+        delete(url, :headers => headers)
+      end
+
+
     end
 
   end
