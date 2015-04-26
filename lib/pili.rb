@@ -50,6 +50,21 @@ module Pili
       response.parsed_response
     end
 
+
+    def update_stream(stream_id, options = {})
+      url = Config.api_base_url + "/streams/" + stream_id
+
+      body = {
+        :publishKey       => options[:publish_key],
+        :publishSecurity  => options[:publish_security] == "static" ? "static" : "dynamic",
+      }
+
+      body.delete_if { |k, v| v.nil? }
+
+      response = HTTP.api_post(url, body)
+      response.parsed_response
+    end
+
   end
 
 end
