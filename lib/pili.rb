@@ -1,39 +1,28 @@
 # coding: utf-8
-require 'rest_client'
+require 'json'
+require 'httparty'
 require "pili/version"
 
 module Pili
   autoload :Auth,   'pili/auth'
   autoload :Config, 'pili/config'
+  autoload :HTTP,   'pili/http'
 
   class << self
 
     def setup!(options = {})
-      Config.init options
-    end
-
-    def hubs
-      url = Config.api_base_url + "/hubs"
-      encoded_sign = Auth.sign(Config.secret_key, Auth.generate_signature({:url => url}))
-      headers = {
-        :accept => :json,
-        "Authorization" => "Qiniu #{Config.access_key}:#{encoded_sign}"
-      }
-
-      p [url, headers]
-
-      response = RestClient.get(url, headers)
+      Config.init(options)
     end
 
 
-    def streams(hub)
+    def stream_list(hub, options = {})
       url = Config.api_base_url + "/streams?hub=#{hub}"
-      encoded_sign = Auth.sign(Config.secret_key, Auth.generate_signature({:url => url}))
-      headers = {
-        :accept => :json,
-        "Authorization" => "Qiniu #{Config.access_key}:#{encoded_sign}"
-      }
-      response = RestClient.get(url, headers)
+
+      url += "&marker=#{options[:marker]}" if options[:marker].is_a?(Fixnum)
+      url += "&limit=#{options[:limit]}"   if options[:limit].is_a?(Fixnum)
+
+      response = HTTP.api_get(url)
+      response.parsed_response
     end
 
   end
