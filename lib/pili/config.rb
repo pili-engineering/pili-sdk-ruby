@@ -40,6 +40,10 @@ module Pili
         settings[:secret_key]
       end
 
+      def rtmp_PublishHost
+        settings[:default_rtmp_publish_host]
+      end
+
     end
   end
 end

@@ -84,6 +84,19 @@ module Pili
     end
 
 
+    def get_stream_publish_url(stream_id, publish_key, publish_security, nonce = Time.now.to_i)
+      a = stream_id.split(".")
+      hub, title = a[1], a[2]
+
+      if publish_security == "static"
+        "rtmp://#{Config.rtmp_PublishHost}/#{hub}/#{title}?key=#{publish_key}"
+      else
+        token = Auth.sign(Config.secret_key, "/#{hub}/#{title}?nonce=#{nonce}")
+        "rtmp://#{Config.rtmp_PublishHost}/#{hub}/#{title}?nonce=#{nonce}&token=#{token}"
+      end
+    end
+
+
   end
 
 end
