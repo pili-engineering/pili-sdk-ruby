@@ -43,6 +43,13 @@ module Pili
       response.parsed_response
     end
 
+
+    def get_stream(stream_id)
+      url = Config.api_base_url + "/streams/" + stream_id
+      response = HTTP.api_get(url)
+      response.parsed_response
+    end
+
   end
 
 end
