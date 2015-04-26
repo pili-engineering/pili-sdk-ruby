@@ -65,6 +65,25 @@ module Pili
       response.parsed_response
     end
 
+
+    def delete_stream(stream_id)
+      url = Config.api_base_url + "/streams/" + stream_id
+      response = HTTP.api_delete(url)
+      response.parsed_response
+    end
+
+
+    def get_stream_segments(stream_id, options = {})
+      url = Config.api_base_url + "/streams/#{stream_id}/segments"
+
+      url += "?start=#{options[:start]}" if options[:start].is_a?(Fixnum)
+      url += "&end=#{options[:end]}"     if options[:end].is_a?(Fixnum)
+
+      response = HTTP.api_get(url)
+      response.parsed_response
+    end
+
+
   end
 
 end
