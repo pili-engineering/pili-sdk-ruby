@@ -25,6 +25,24 @@ module Pili
       response.parsed_response
     end
 
+
+    def create_stream(hub, options = {})
+      url = Config.api_base_url + "/streams"
+
+      body = {
+        :hub              => hub,
+        :title            => options[:title],
+        :publishKey       => options[:publish_key],
+        :publishSecurity  => options[:publish_security] == "static" ? "static" : "dynamic",
+        :clientIp         => options[:client_ip]
+      }
+
+      body.delete_if { |k, v| v.nil? }
+
+      response = HTTP.api_post(url, body)
+      response.parsed_response
+    end
+
   end
 
 end
