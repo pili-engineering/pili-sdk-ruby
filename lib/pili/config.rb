@@ -4,23 +4,23 @@ module Pili
     class << self
 
       DEFAULT_OPTIONS = {
-        :api_version        => "v1",
-        :api_scheme         => "http",
+        :default_api_version        => "v1",
+        :default_api_scheme         => "http",
+        :default_api_host           => "pili.qiniuapi.com",
 
-        :api_host           => "pili.qiniuapi.com",
-        :rtmp_publish_host  => "pub.z1.glb.pili.qiniup.com",
-        :rtmp_play_host     => "live.z1.glb.pili.qiniucdn.com",
-        :hls_play_host      => "hls.z1.glb.pili.qiniuapi.com",
+        :default_rtmp_publish_host  => "pub.z1.glb.pili.qiniup.com",
+        :default_rtmp_play_host     => "live.z1.glb.pili.qiniucdn.com",
+        :default_hls_play_host      => "hls.z1.glb.pili.qiniuapi.com",
 
-        :access_key         => "",
-        :secret_key         => ""
+        :access_key                 => "",
+        :secret_key                 => ""
       }
 
       REQUIRED_OPTION_KEYS = [:access_key, :secret_key]
 
       attr_reader :settings, :default_params
 
-      def init options = {}
+      def init(options = {})
         @settings = DEFAULT_OPTIONS.merge!(options)
         REQUIRED_OPTION_KEYS.each do |opt|
           raise MissingArgsError, [opt] unless @settings.has_key?(opt)
@@ -29,7 +29,7 @@ module Pili
       end
 
       def api_base_url
-        "#{settings[:api_scheme]}://#{settings[:api_host]}/#{settings[:api_version]}"
+        "#{settings[:default_api_scheme]}://#{settings[:default_api_host]}/#{settings[:default_api_version]}"
       end
 
       def access_key
