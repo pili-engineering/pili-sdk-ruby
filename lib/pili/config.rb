@@ -4,32 +4,32 @@ module Pili
     class << self
 
       DEFAULT_OPTIONS = {
-        :default_api_version        => "v1",
-        :default_api_scheme         => "http",
-        :default_api_host           => "pili.qiniuapi.com",
+        :api_version        => "v1",
+        :api_scheme         => "http",
+        :api_host           => "pili.qiniuapi.com",
 
-        :default_rtmp_publish_host  => "pub.z1.glb.pili.qiniup.com",
-        :default_rtmp_play_host     => "live.z1.glb.pili.qiniucdn.com",
-        :default_hls_play_host      => "hls.z1.glb.pili.qiniuapi.com",
+        :rtmp_publish_host  => "pub.z1.glb.pili.qiniup.com",
+        :rtmp_play_host     => "live.z1.glb.pili.qiniucdn.com",
+        :hls_play_host      => "hls.z1.glb.pili.qiniuapi.com"#,
 
-        :access_key                 => "",
-        :secret_key                 => ""
+        # :access_key         => "",
+        # :secret_key         => ""
       }
 
       REQUIRED_OPTION_KEYS = [:access_key, :secret_key]
 
-      attr_reader :settings, :default_params
+      attr_reader :settings
 
       def init(options = {})
         @settings = DEFAULT_OPTIONS.merge!(options)
         REQUIRED_OPTION_KEYS.each do |opt|
-          raise MissingArgsError, [opt] unless @settings.has_key?(opt)
+          raise("You did not provide both required args. Please provide the #{opt}.") unless @settings.has_key?(opt)
         end
         @settings
       end
 
       def api_base_url
-        "#{settings[:default_api_scheme]}://#{settings[:default_api_host]}/#{settings[:default_api_version]}"
+        "#{settings[:api_scheme]}://#{settings[:api_host]}/#{settings[:api_version]}"
       end
 
       def access_key
@@ -40,8 +40,16 @@ module Pili
         settings[:secret_key]
       end
 
-      def rtmp_PublishHost
-        settings[:default_rtmp_publish_host]
+      def rtmp_publish_host
+        settings[:rtmp_publish_host]
+      end
+
+      def rtmp_play_host
+        settings[:rtmp_play_host]
+      end
+
+      def hls_play_host
+        settings[:hls_play_host]
       end
 
     end
