@@ -89,10 +89,47 @@ module Pili
       hub, title = a[1], a[2]
 
       if publish_security == "static"
-        "rtmp://#{Config.rtmp_PublishHost}/#{hub}/#{title}?key=#{publish_key}"
+        "rtmp://#{Config.rtmp_publish_host}/#{hub}/#{title}?key=#{publish_key}"
       else
         token = Auth.sign(Config.secret_key, "/#{hub}/#{title}?nonce=#{nonce}")
-        "rtmp://#{Config.rtmp_PublishHost}/#{hub}/#{title}?nonce=#{nonce}&token=#{token}"
+        "rtmp://#{Config.rtmp_publish_host}/#{hub}/#{title}?nonce=#{nonce}&token=#{token}"
+      end
+    end
+
+
+    def get_stream_rtmp_live_url(stream_id, preset = nil)
+      a = stream_id.split(".")
+      hub, title = a[1], a[2]
+
+      if preset.nil? && preset.empty?
+        return "rtmp://#{Config.rtmp_play_host}/#{hub}/#{title}"
+      else
+        return "rtmp://#{Config.rtmp_play_host}/#{hub}/#{title}@#{profile}"
+      end
+
+    end
+
+
+    def get_stream_hls_live_url(stream_id, preset = nil)
+      a = stream_id.split(".")
+      hub, title = a[1], a[2]
+
+      if preset.nil? && preset.empty?
+        "http://#{Config.hls_play_host}/#{hub}/#{title}.m3u8"
+      else
+        "http://#{Config.hls_play_host}/#{hub}/#{title}@#{profile}.m3u8"
+      end
+    end
+
+
+    def get_stream_hls_playback_url(stream_id, start_second, end_second, preset = nil)
+      a = stream_id.split(".")
+      hub, title = a[1], a[2]
+
+      if preset.nil? && preset.empty?
+        "http://#{Config.hls_play_host}/#{hub}/#{title}.m3u8?start=#{start_second}&end=#{end_second}"
+      else
+        "http://#{Config.hls_play_host}/#{hub}/#{title}@#{profile}.m3u8?start=#{start_second}&end=#{end_second}"
       end
     end
 
