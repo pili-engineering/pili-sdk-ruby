@@ -1,7 +1,7 @@
 # pili-ruby
 =========
 
-pili-io Ruby SDK
+Pili SDK for Ruby.
 
 ## Installation
 
@@ -37,18 +37,14 @@ You'll need to configure it in config/initializes/pili.rb
 
 ```ruby
 Pili.create_stream(hub_name)
-```
 
-# with options
-
-```ruby
 stream_options = {
 	title:				"test_name", 	# optional, default is auto-generated
     publish_key:		"test_key",   	# optional, a secret key for signing the <publishToken>
 	publish_security: 	"dynamic"		# optional, can be "dynamic" or "static", default is "dynamic"
 }
 
-Pili.create_stream(hub_name, stream_options)
+Pili.create_stream(hub_name, stream_options) # with options
 ```
 
 ### Get Stream
@@ -67,11 +63,8 @@ Pili.update_stream(stream_id, publish_key: publish_key, publish_security: publis
 
 ```ruby
 Pili.stream_list(hub)
-```
 
-```ruby
-# marker, limit: integer, optional
-Pili.stream_list(hub, marker: marker, limit: limit)
+Pili.stream_list(hub, marker: marker, limit: limit) # marker, limit: integer, optional
 ```
 
 ### Delete Stream
@@ -118,7 +111,7 @@ Pili.get_stream_hls_live_url(stream_id, preset)
 Pili.get_stream_hls_playback_url(stream_id, start_second, end_second)
 Pili.get_stream_hls_playback_url(stream_id, start_second, end_second, preset)
 ```
-	
+
 
 ## Contributing
 
