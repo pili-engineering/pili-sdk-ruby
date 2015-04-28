@@ -8,8 +8,8 @@ Gem::Specification.new do |spec|
   spec.version       = Pili::VERSION
   spec.authors       = ["Miclle"]
   spec.email         = ["pili@qiniu.com"]
-  spec.summary       = %q{pili-io Ruby SDK.}
-  spec.description   = %q{pili-io Ruby SDK.}
+  spec.summary       = %q{Pili SDK for Ruby.}
+  spec.description   = %q{Pili SDK for Ruby. https://github.com/pili-io/pili-sdk-ruby}
   spec.homepage      = "https://github.com/pili-io/pili-sdk-ruby"
   spec.license       = "MIT"
 
