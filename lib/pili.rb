@@ -104,10 +104,10 @@ module Pili
       a = stream_id.split(".")
       hub, title = a[1], a[2]
 
-      if preset.nil? && preset.empty?
-        return "rtmp://#{Config.rtmp_play_host}/#{hub}/#{title}"
+      if !preset.nil? && !preset.empty?
+        return "rtmp://#{Config.rtmp_play_host}/#{hub}/#{title}@#{preset}"
       else
-        return "rtmp://#{Config.rtmp_play_host}/#{hub}/#{title}@#{profile}"
+        return "rtmp://#{Config.rtmp_play_host}/#{hub}/#{title}"
       end
 
     end
@@ -117,10 +117,10 @@ module Pili
       a = stream_id.split(".")
       hub, title = a[1], a[2]
 
-      if preset.nil? && preset.empty?
-        "http://#{Config.hls_play_host}/#{hub}/#{title}.m3u8"
+      if !preset.nil? && !preset.empty?
+        return "http://#{Config.hls_play_host}/#{hub}/#{title}@#{preset}.m3u8"
       else
-        "http://#{Config.hls_play_host}/#{hub}/#{title}@#{profile}.m3u8"
+        return "http://#{Config.hls_play_host}/#{hub}/#{title}.m3u8"
       end
     end
 
@@ -129,10 +129,10 @@ module Pili
       a = stream_id.split(".")
       hub, title = a[1], a[2]
 
-      if preset.nil? && preset.empty?
-        "http://#{Config.hls_play_host}/#{hub}/#{title}.m3u8?start=#{start_second}&end=#{end_second}"
+      if !preset.nil? && !preset.empty?
+        return "http://#{Config.hls_play_host}/#{hub}/#{title}@#{preset}.m3u8?start=#{start_second}&end=#{end_second}"
       else
-        "http://#{Config.hls_play_host}/#{hub}/#{title}@#{profile}.m3u8?start=#{start_second}&end=#{end_second}"
+        return "http://#{Config.hls_play_host}/#{hub}/#{title}.m3u8?start=#{start_second}&end=#{end_second}"
       end
     end
 
