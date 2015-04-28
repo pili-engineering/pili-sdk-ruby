@@ -92,10 +92,10 @@ module Pili
       hub, title = a[1], a[2]
 
       if publish_security == "static"
-        "rtmp://#{Config.rtmp_publish_host}/#{hub}/#{title}?key=#{publish_key}"
+        return "rtmp://#{Config.rtmp_publish_host}/#{hub}/#{title}?key=#{publish_key}"
       else
         token = Auth.sign(publish_key, "/#{hub}/#{title}?nonce=#{nonce}")
-        "rtmp://#{Config.rtmp_publish_host}/#{hub}/#{title}?nonce=#{nonce}&token=#{token}"
+        return "rtmp://#{Config.rtmp_publish_host}/#{hub}/#{title}?nonce=#{nonce}&token=#{token}"
       end
     end
 
@@ -109,7 +109,6 @@ module Pili
       else
         return "rtmp://#{Config.rtmp_play_host}/#{hub}/#{title}"
       end
-
     end
 
 
