@@ -87,7 +87,7 @@ module Pili
 
     def get_stream_publish_url(stream_id, publish_key, publish_security, nonce = nil)
       nonce = nonce.to_i
-      nonce = Time.now.to_i * 1000 if nonce == 0
+      nonce = (Time.now.to_f * 1000.0).to_i if nonce == 0
 
       a = stream_id.split(".")
       hub, title = a[1], a[2]
