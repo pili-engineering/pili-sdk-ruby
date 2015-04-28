@@ -7,6 +7,7 @@ module Pili
   autoload :Auth,   'pili/auth'
   autoload :Config, 'pili/config'
   autoload :HTTP,   'pili/http'
+  autoload :Utils,  'pili/utils'
 
   class << self
 
@@ -104,7 +105,7 @@ module Pili
       a = stream_id.split(".")
       hub, title = a[1], a[2]
 
-      if preset.to_s.strip.length == 0
+      if Utils.blank? preset
         return "rtmp://#{Config.rtmp_play_host}/#{hub}/#{title}"
       else
         return "rtmp://#{Config.rtmp_play_host}/#{hub}/#{title}@#{preset}"
@@ -116,7 +117,7 @@ module Pili
       a = stream_id.split(".")
       hub, title = a[1], a[2]
 
-      if preset.to_s.strip.length == 0
+      if Utils.blank? preset
         return "http://#{Config.hls_play_host}/#{hub}/#{title}.m3u8"
       else
         return "http://#{Config.hls_play_host}/#{hub}/#{title}@#{preset}.m3u8"
@@ -128,7 +129,7 @@ module Pili
       a = stream_id.split(".")
       hub, title = a[1], a[2]
 
-      if preset.to_s.strip.length == 0
+      if Utils.blank? preset
         return "http://#{Config.hls_play_host}/#{hub}/#{title}.m3u8?start=#{start_second}&end=#{end_second}"
       else
         return "http://#{Config.hls_play_host}/#{hub}/#{title}@#{preset}.m3u8?start=#{start_second}&end=#{end_second}"
