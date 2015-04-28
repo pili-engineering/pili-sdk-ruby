@@ -21,10 +21,13 @@ Or install it yourself as:
 
 ### Initialize
 
-	require 'pili'
+```ruby
+require 'pili'
+
+Pili.setup! access_key: '<YOUR_APP_ACCESS_KEY>', 
+			secret_key: '<YOUR_APP_SECRET_KEY>'
+```
 	
-	Pili.setup! access_key: '<YOUR_APP_ACCESS_KEY>', 
-				secret_key: '<YOUR_APP_SECRET_KEY>'	
 #### with rails:
 
 You'll need to configure it in config/initializes/pili.rb
@@ -32,61 +35,89 @@ You'll need to configure it in config/initializes/pili.rb
 
 ### Create Stream
 
-	Pili.create_stream(hub_name)
-	
-	# with options
-	stream_options = {
-		title:				"test_name", 	# optional, default is auto-generated
-        publish_key:		"test_key",   	# optional, a secret key for signing the <publishToken>
-        publish_security: 	"dynamic"		# optional, can be "dynamic" or "static", default is "dynamic"
-	}
+```ruby
+Pili.create_stream(hub_name)
+```
 
-	Pili.create_stream(hub_name, stream_options)
+# with options
+
+```ruby
+stream_options = {
+	title:				"test_name", 	# optional, default is auto-generated
+    publish_key:		"test_key",   	# optional, a secret key for signing the <publishToken>
+	publish_security: 	"dynamic"		# optional, can be "dynamic" or "static", default is "dynamic"
+}
+
+Pili.create_stream(hub_name, stream_options)
+```
 
 ### Get Stream
 
-	Pili.create_stream(stream_id)
+```ruby
+Pili.get_stream(stream_id)
+```
 	
 ### Update Stream
 
-	Pili.update_stream(stream_id, publish_key: publish_key, publish_security: publish_security)
+```ruby
+Pili.update_stream(stream_id, publish_key: publish_key, publish_security: publish_security)
+```
 	
 ### Get Stream List
 
-	Pili.stream_list(hub)
-	
-	# marker, limit: integer, optional
-	Pili.stream_list(hub, marker: marker, limit: limit)
+```ruby
+Pili.stream_list(hub)
+```
+
+```ruby
+# marker, limit: integer, optional
+Pili.stream_list(hub, marker: marker, limit: limit)
+```
 
 ### Delete Stream
 
-	Pili.delete_stream(stream_id)
+```ruby
+Pili.delete_stream(stream_id)
+```
 	
 ### Get Stream Segments
-	Pili.get_stream_segments(stream_id)
-	
-	# start, end: integer, optional
-	Pili.get_stream_segments(stream_id, start: timestamp, end: timestamp)
+
+```ruby
+Pili.get_stream_segments(stream_id)
+```
+
+```ruby
+# start, end: integer, optional
+Pili.get_stream_segments(stream_id, start: timestamp, end: timestamp)
+```
 
 ### Get Stream Publish URL
 
-	Pili.get_stream_publish_url(stream_id, publish_key, publish_security)
-	Pili.get_stream_publish_url(stream_id, publish_key, publish_security, timestamp)
+```ruby
+Pili.get_stream_publish_url(stream_id, publish_key, publish_security)
+Pili.get_stream_publish_url(stream_id, publish_key, publish_security, timestamp)
+```
 	
 ### Get Stream RTMP Live URL
 
-	Pili.get_stream_rtmp_live_url(stream_id)
-	Pili.get_stream_rtmp_live_url(stream_id, preset)
+```ruby
+Pili.get_stream_rtmp_live_url(stream_id)
+Pili.get_stream_rtmp_live_url(stream_id, preset)
+```
 
 ### Get Stream HLS Live URL
 
-	Pili.get_stream_hls_live_url(stream_id)
-	Pili.get_stream_hls_live_url(stream_id, preset)
+```ruby
+Pili.get_stream_hls_live_url(stream_id)
+Pili.get_stream_hls_live_url(stream_id, preset)
+```
 	
 ### Get Stream HLS Playback URL
 
-	Pili.get_stream_hls_playback_url(stream_id, start_second, end_second)
-	Pili.get_stream_hls_playback_url(stream_id, start_second, end_second, preset)
+```ruby
+Pili.get_stream_hls_playback_url(stream_id, start_second, end_second)
+Pili.get_stream_hls_playback_url(stream_id, start_second, end_second, preset)
+```
 	
 
 ## Contributing
