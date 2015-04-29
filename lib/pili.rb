@@ -19,7 +19,7 @@ module Pili
     def stream_list(hub, options = {})
       url = Config.api_base_url + "/streams?hub=#{hub}"
 
-      url += "&marker=#{options[:marker]}" if options[:marker].is_a?(Fixnum)
+      url += "&marker=#{options[:marker]}" unless Utils.blank?(options[:marker])
       url += "&limit=#{options[:limit]}"   if options[:limit].is_a?(Fixnum)
 
       response = HTTP.api_get(url)
