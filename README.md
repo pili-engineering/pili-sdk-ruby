@@ -87,29 +87,29 @@ Pili.get_stream_segments(stream_id, start: timestamp, end: timestamp)
 ### Get Stream Publish URL
 
 ```ruby
-Pili.get_stream_publish_url(stream_id, publish_key, publish_security)
-Pili.get_stream_publish_url(stream_id, publish_key, publish_security, timestamp)
+Pili.get_stream_publish_url(publish_host, stream_id, publish_key, publish_security)
+Pili.get_stream_publish_url(publish_host, stream_id, publish_key, publish_security, timestamp)
 ```
 	
 ### Get Stream RTMP Live URL
 
 ```ruby
-Pili.get_stream_rtmp_live_url(stream_id)
-Pili.get_stream_rtmp_live_url(stream_id, preset)
+Pili.get_stream_rtmp_live_url(rtmp_play_host, stream_id)
+Pili.get_stream_rtmp_live_url(rtmp_play_host, stream_id, preset)
 ```
 
 ### Get Stream HLS Live URL
 
 ```ruby
-Pili.get_stream_hls_live_url(stream_id)
-Pili.get_stream_hls_live_url(stream_id, preset)
+Pili.get_stream_hls_live_url(hls_play_host, stream_id)
+Pili.get_stream_hls_live_url(hls_play_host, stream_id, preset)
 ```
 	
 ### Get Stream HLS Playback URL
 
 ```ruby
-Pili.get_stream_hls_playback_url(stream_id, start_second, end_second)
-Pili.get_stream_hls_playback_url(stream_id, start_second, end_second, preset)
+Pili.get_stream_hls_playback_url(hls_play_host, stream_id, start_second, end_second)
+Pili.get_stream_hls_playback_url(hls_play_host, stream_id, start_second, end_second, preset)
 ```
 
 
