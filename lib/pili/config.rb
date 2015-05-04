@@ -6,11 +6,11 @@ module Pili
       DEFAULT_OPTIONS = {
         :api_version        => "v1",
         :api_scheme         => "http",
-        :api_host           => "pili.qiniuapi.com",
+        :api_host           => "pili.qiniuapi.com"
 
-        :rtmp_publish_host  => "pub.z1.glb.pili.qiniup.com",
-        :rtmp_play_host     => "live.z1.glb.pili.qiniucdn.com",
-        :hls_play_host      => "hls.z1.glb.pili.qiniuapi.com"#,
+        # :rtmp_publish_host  => "pub.z1.glb.pili.qiniup.com",
+        # :rtmp_play_host     => "live.z1.glb.pili.qiniucdn.com",
+        # :hls_play_host      => "hls.z1.glb.pili.qiniuapi.com",
 
         # :access_key         => "",
         # :secret_key         => ""
@@ -38,18 +38,6 @@ module Pili
 
       def secret_key
         settings[:secret_key]
-      end
-
-      def rtmp_publish_host
-        settings[:rtmp_publish_host]
-      end
-
-      def rtmp_play_host
-        settings[:rtmp_play_host]
-      end
-
-      def hls_play_host
-        settings[:hls_play_host]
       end
 
     end

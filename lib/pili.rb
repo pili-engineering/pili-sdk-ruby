@@ -85,50 +85,50 @@ module Pili
     end
 
 
-    def get_stream_publish_url(stream_id, publish_key, publish_security, nonce = nil)
+    def get_stream_publish_url(publish_host, stream_id, publish_key, publish_security, nonce = nil)
       nonce = nonce.to_i
       nonce = (Time.now.to_f * 1000.0).to_i if nonce == 0
 
       hub, title = Utils.get_stream_hub_and_title(stream_id)
 
       if publish_security == "static"
-        return "rtmp://#{Config.rtmp_publish_host}/#{hub}/#{title}?key=#{publish_key}"
+        return "rtmp://#{publish_host}/#{hub}/#{title}?key=#{publish_key}"
       else
         token = Auth.sign(publish_key, "/#{hub}/#{title}?nonce=#{nonce}")
-        return "rtmp://#{Config.rtmp_publish_host}/#{hub}/#{title}?nonce=#{nonce}&token=#{token}"
+        return "rtmp://#{publish_host}/#{hub}/#{title}?nonce=#{nonce}&token=#{token}"
       end
     end
 
 
-    def get_stream_rtmp_live_url(stream_id, preset = nil)
+    def get_stream_rtmp_live_url(play_host, stream_id, preset = nil)
       hub, title = Utils.get_stream_hub_and_title(stream_id)
 
       if Utils.blank? preset
-        return "rtmp://#{Config.rtmp_play_host}/#{hub}/#{title}"
+        return "rtmp://#{play_host}/#{hub}/#{title}"
       else
-        return "rtmp://#{Config.rtmp_play_host}/#{hub}/#{title}@#{preset}"
+        return "rtmp://#{play_host}/#{hub}/#{title}@#{preset}"
       end
     end
 
 
-    def get_stream_hls_live_url(stream_id, preset = nil)
+    def get_stream_hls_live_url(play_host, stream_id, preset = nil)
       hub, title = Utils.get_stream_hub_and_title(stream_id)
 
       if Utils.blank? preset
-        return "http://#{Config.hls_play_host}/#{hub}/#{title}.m3u8"
+        return "http://#{play_host}/#{hub}/#{title}.m3u8"
       else
-        return "http://#{Config.hls_play_host}/#{hub}/#{title}@#{preset}.m3u8"
+        return "http://#{play_host}/#{hub}/#{title}@#{preset}.m3u8"
       end
     end
 
 
-    def get_stream_hls_playback_url(stream_id, start_second, end_second, preset = nil)
+    def get_stream_hls_playback_url(play_host, stream_id, start_second, end_second, preset = nil)
       hub, title = Utils.get_stream_hub_and_title(stream_id)
 
       if Utils.blank? preset
-        return "http://#{Config.hls_play_host}/#{hub}/#{title}.m3u8?start=#{start_second}&end=#{end_second}"
+        return "http://#{play_host}/#{hub}/#{title}.m3u8?start=#{start_second}&end=#{end_second}"
       else
-        return "http://#{Config.hls_play_host}/#{hub}/#{title}@#{preset}.m3u8?start=#{start_second}&end=#{end_second}"
+        return "http://#{play_host}/#{hub}/#{title}@#{preset}.m3u8?start=#{start_second}&end=#{end_second}"
       end
     end
 
