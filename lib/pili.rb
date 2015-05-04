@@ -89,8 +89,7 @@ module Pili
       nonce = nonce.to_i
       nonce = (Time.now.to_f * 1000.0).to_i if nonce == 0
 
-      a = stream_id.split(".")
-      hub, title = a[1], a[2]
+      hub, title = Utils.get_stream_hub_and_title(stream_id)
 
       if publish_security == "static"
         return "rtmp://#{Config.rtmp_publish_host}/#{hub}/#{title}?key=#{publish_key}"
@@ -102,8 +101,7 @@ module Pili
 
 
     def get_stream_rtmp_live_url(stream_id, preset = nil)
-      a = stream_id.split(".")
-      hub, title = a[1], a[2]
+      hub, title = Utils.get_stream_hub_and_title(stream_id)
 
       if Utils.blank? preset
         return "rtmp://#{Config.rtmp_play_host}/#{hub}/#{title}"
@@ -114,8 +112,7 @@ module Pili
 
 
     def get_stream_hls_live_url(stream_id, preset = nil)
-      a = stream_id.split(".")
-      hub, title = a[1], a[2]
+      hub, title = Utils.get_stream_hub_and_title(stream_id)
 
       if Utils.blank? preset
         return "http://#{Config.hls_play_host}/#{hub}/#{title}.m3u8"
@@ -126,8 +123,7 @@ module Pili
 
 
     def get_stream_hls_playback_url(stream_id, start_second, end_second, preset = nil)
-      a = stream_id.split(".")
-      hub, title = a[1], a[2]
+      hub, title = Utils.get_stream_hub_and_title(stream_id)
 
       if Utils.blank? preset
         return "http://#{Config.hls_play_host}/#{hub}/#{title}.m3u8?start=#{start_second}&end=#{end_second}"
