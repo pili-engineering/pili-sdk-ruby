@@ -40,13 +40,11 @@ You'll need to configure it in config/initializes/pili.rb
 ```ruby
 Pili.create_stream(hub_name)
 
-stream_options = {
-	title:				"test_name", 	# optional, default is auto-generated
-    publish_key:		"test_key",   	# optional, a secret key for signing the <publishToken>
-	publish_security: 	"dynamic"		# optional, can be "dynamic" or "static", default is "dynamic"
-}
+#title: optional, default is auto-generated
+#publish_key: optional, a secret key for signing the <publishToken>
+#publish_security: optional, can be "dynamic" or "static", default is "dynamic"
 
-Pili.create_stream(hub_name, stream_options) # with options
+Pili.create_stream(hub_name, title: title, publish_key: publish_key, publish_security: publish_security)
 ```
 
 #### Get Stream
