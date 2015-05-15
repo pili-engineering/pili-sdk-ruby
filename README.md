@@ -19,7 +19,7 @@ Or install it yourself as:
 
 ## Usage
 
-### Initialize
+### Configuration
 
 ```ruby
 require 'pili'
@@ -33,7 +33,9 @@ Pili.setup! access_key: '<YOUR_APP_ACCESS_KEY>',
 You'll need to configure it in config/initializes/pili.rb
 
 
-### Create Stream
+### Example
+
+#### Create Stream
 
 ```ruby
 Pili.create_stream(hub_name)
@@ -47,19 +49,19 @@ stream_options = {
 Pili.create_stream(hub_name, stream_options) # with options
 ```
 
-### Get Stream
+#### Get Stream
 
 ```ruby
 Pili.get_stream(stream_id)
 ```
 	
-### Update Stream
+#### Update Stream
 
 ```ruby
 Pili.update_stream(stream_id, publish_key: publish_key, publish_security: publish_security)
 ```
 	
-### Get Stream List
+#### Get Stream List
 
 ```ruby
 Pili.stream_list(hub)
@@ -67,13 +69,13 @@ Pili.stream_list(hub)
 Pili.stream_list(hub, marker: marker, limit: limit) # marker, limit: integer, optional
 ```
 
-### Delete Stream
+#### Delete Stream
 
 ```ruby
 Pili.delete_stream(stream_id)
 ```
 	
-### Get Stream Segments
+#### Get Stream Segments
 
 ```ruby
 Pili.get_stream_segments(stream_id)
@@ -84,28 +86,28 @@ Pili.get_stream_segments(stream_id)
 Pili.get_stream_segments(stream_id, start: timestamp, end: timestamp)
 ```
 
-### Get Stream Publish URL
+#### Get Stream Publish URL
 
 ```ruby
 Pili.get_stream_publish_url(publish_host, stream_id, publish_key, publish_security)
 Pili.get_stream_publish_url(publish_host, stream_id, publish_key, publish_security, timestamp)
 ```
 	
-### Get Stream RTMP Live URL
+#### Get Stream RTMP Live URL
 
 ```ruby
 Pili.get_stream_rtmp_live_url(rtmp_play_host, stream_id)
 Pili.get_stream_rtmp_live_url(rtmp_play_host, stream_id, preset)
 ```
 
-### Get Stream HLS Live URL
+#### Get Stream HLS Live URL
 
 ```ruby
 Pili.get_stream_hls_live_url(hls_play_host, stream_id)
 Pili.get_stream_hls_live_url(hls_play_host, stream_id, preset)
 ```
 	
-### Get Stream HLS Playback URL
+#### Get Stream HLS Playback URL
 
 ```ruby
 Pili.get_stream_hls_playback_url(hls_play_host, stream_id, start_second, end_second)
