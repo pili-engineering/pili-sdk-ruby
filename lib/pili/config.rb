@@ -7,13 +7,6 @@ module Pili
         :api_version        => "v1",
         :api_scheme         => "http",
         :api_host           => "pili.qiniuapi.com"
-
-        # :rtmp_publish_host  => "pub.z1.glb.pili.qiniup.com",
-        # :rtmp_play_host     => "live.z1.glb.pili.qiniucdn.com",
-        # :hls_play_host      => "hls.z1.glb.pili.qiniuapi.com",
-
-        # :access_key         => "",
-        # :secret_key         => ""
       }
 
       REQUIRED_OPTION_KEYS = [:access_key, :secret_key]
