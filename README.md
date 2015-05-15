@@ -66,7 +66,10 @@ Pili.update_stream(stream_id, publish_key: publish_key, publish_security: publis
 ```ruby
 Pili.stream_list(hub)
 
-Pili.stream_list(hub, marker: marker, limit: limit) # marker, limit: integer, optional
+# hub: string, required
+# marker: string, optional
+# limit: integer, optional
+Pili.stream_list(hub, marker: marker, limit: limit)
 ```
 
 #### Delete Stream
