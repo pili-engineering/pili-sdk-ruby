@@ -104,7 +104,7 @@ Pili.get_stream_segments(stream_id, start: timestamp, end: timestamp)
 # publish_key: string, required
 # publish_security: string, required
 # nonce: unix timestamp, optional
-Pili.get_stream_publish_url(RTMP_PUBLISH_HOST, stream_id, publish_key, publish_security, timestamp)
+Pili.get_stream_publish_url(RTMP_PUBLISH_HOST, stream_id, publish_key, publish_security, nonce)
 ```
 
 #### Get Stream RTMP Live URL
