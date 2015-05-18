@@ -35,15 +35,26 @@ You'll need to configure it in config/initializes/pili.rb
 
 ### Example
 
+```
+# Replace with your customized domains
+RTMP_PUBLISH_HOST = "xxx.pub.z1.pili.qiniup.com"
+RTMP_PLAY_HOST 	  = "xxx.live1.z1.pili.qiniucdn.com"
+HLS_PLAY_HOST     = "xxx.hls1.z1.pili.qiniucdn.com"
+
+# Replace with your hub name
+HUB_NAME = "hub_name"
+```
+
+
 #### Create Stream
 
 ```ruby
-Pili.create_stream(hub_name)
+Pili.create_stream(HUB_NAME)
 
 # title: optional, default is auto-generated
 # publish_key: optional, a secret key for signing the <publishToken>
 # publish_security: optional, can be "dynamic" or "static", default is "dynamic"
-Pili.create_stream(hub_name, title: title, publish_key: publish_key, publish_security: publish_security)
+Pili.create_stream(HUB_NAME, title: title, publish_key: publish_key, publish_security: publish_security)
 ```
 
 #### Get Stream
@@ -61,12 +72,12 @@ Pili.update_stream(stream_id, publish_key: publish_key, publish_security: publis
 #### Get Stream List
 
 ```ruby
-Pili.stream_list(hub)
+Pili.stream_list(HUB_NAME)
 
 # hub: string, required
 # marker: string, optional
 # limit: integer, optional
-Pili.stream_list(hub, marker: marker, limit: limit)
+Pili.stream_list(HUB_NAME, marker: marker, limit: limit)
 ```
 
 #### Delete Stream
@@ -89,29 +100,29 @@ Pili.get_stream_segments(stream_id, start: timestamp, end: timestamp)
 #### Get Stream Publish URL
 
 ```ruby
-Pili.get_stream_publish_url(publish_host, stream_id, publish_key, publish_security)
-Pili.get_stream_publish_url(publish_host, stream_id, publish_key, publish_security, timestamp)
+Pili.get_stream_publish_url(RTMP_PUBLISH_HOST, stream_id, publish_key, publish_security)
+Pili.get_stream_publish_url(RTMP_PUBLISH_HOST, stream_id, publish_key, publish_security, timestamp)
 ```
 	
 #### Get Stream RTMP Live URL
 
 ```ruby
-Pili.get_stream_rtmp_live_url(rtmp_play_host, stream_id)
-Pili.get_stream_rtmp_live_url(rtmp_play_host, stream_id, preset)
+Pili.get_stream_rtmp_live_url(RTMP_PLAY_HOST, stream_id)
+Pili.get_stream_rtmp_live_url(RTMP_PLAY_HOST, stream_id, profile)
 ```
 
 #### Get Stream HLS Live URL
 
 ```ruby
-Pili.get_stream_hls_live_url(hls_play_host, stream_id)
-Pili.get_stream_hls_live_url(hls_play_host, stream_id, preset)
+Pili.get_stream_hls_live_url(HLS_PLAY_HOST, stream_id)
+Pili.get_stream_hls_live_url(HLS_PLAY_HOST, stream_id, profile)
 ```
 	
 #### Get Stream HLS Playback URL
 
 ```ruby
-Pili.get_stream_hls_playback_url(hls_play_host, stream_id, start_second, end_second)
-Pili.get_stream_hls_playback_url(hls_play_host, stream_id, start_second, end_second, preset)
+Pili.get_stream_hls_playback_url(HLS_PLAY_HOST, stream_id, start_second, end_second)
+Pili.get_stream_hls_playback_url(HLS_PLAY_HOST, stream_id, start_second, end_second, profile)
 ```
 
 
