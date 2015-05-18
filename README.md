@@ -35,7 +35,7 @@ You'll need to configure it in config/initializes/pili.rb
 
 ### Example
 
-```
+```ruby
 # Replace with your customized domains
 RTMP_PUBLISH_HOST = "xxx.pub.z1.pili.qiniup.com"
 RTMP_PLAY_HOST 	  = "xxx.live1.z1.pili.qiniucdn.com"
