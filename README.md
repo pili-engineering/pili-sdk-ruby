@@ -53,7 +53,7 @@ HUB_NAME = "hub_name"
 # title: optional, default is auto-generated
 # publish_key: optional, a secret key for signing the <publishToken>
 # publish_security: optional, can be "dynamic" or "static", default is "dynamic"
-Pili.create_stream(HUB_NAME, title: title, publish_key: publish_key, publish_security: publish_security)
+Pili.create_stream(HUB_NAME, title: "test", publish_key: "werqwedsf", publish_security: "static")
 ```
 
 #### Get Stream
@@ -69,7 +69,7 @@ Pili.get_stream(stream_id)
 # stream_id: string, required
 # publish_key: optional, a secret key for signing the <publishToken>
 # publish_security: optional, can be "dynamic" or "static", default is "dynamic"
-Pili.update_stream(stream_id, publish_key: publish_key, publish_security: publish_security)
+Pili.update_stream(stream_id, publish_key: "new_key", publish_security: "dynamic")
 ```
 
 #### Get Stream List
@@ -78,7 +78,7 @@ Pili.update_stream(stream_id, publish_key: publish_key, publish_security: publis
 # HUB_NAME: string, required
 # marker: string, optional
 # limit: integer, optional
-Pili.stream_list(HUB_NAME, marker: marker, limit: limit)
+Pili.stream_list(HUB_NAME, marker: "marker", limit: 50)
 ```
 
 #### Delete Stream
@@ -92,8 +92,8 @@ Pili.delete_stream(stream_id)
 
 ```ruby
 # stream_id: string, required
-# start, end: unix timestamp, optional
-Pili.get_stream_segments(stream_id, start: timestamp, end: timestamp)
+# start_second, end_second: integer, optional
+Pili.get_stream_segments(stream_id, start_second: 1429678551, end_second: 1429689551)
 ```
 
 #### Get Stream Publish URL
@@ -130,7 +130,7 @@ Pili.get_stream_hls_live_url(HLS_PLAY_HOST, stream_id, profile)
 ```ruby
 # HLS_PLAY_HOST, string, required
 # stream_id: string, required
-# start_second, end_second: unix timestamp, required
+# start_second, end_second: integer, required
 # profile: string, optional
 Pili.get_stream_hls_playback_url(HLS_PLAY_HOST, stream_id, start_second, end_second, profile)
 ```
