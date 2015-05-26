@@ -77,7 +77,7 @@ Pili.get_stream_status(stream_id)
 # publish_key: optional, a secret key for signing the <publishToken>
 # publish_security: optional, can be "dynamic" or "static", default is "dynamic"
 # disabled: optional, can be true or false
-Pili.update_stream(stream_id, publish_key: "new_key", publish_security: "dynamic")
+Pili.update_stream(stream_id, publish_key: "new_key", publish_security: "dynamic", disabled: true)
 ```
 
 #### Get Stream List
