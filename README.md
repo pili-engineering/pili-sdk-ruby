@@ -63,13 +63,21 @@ Pili.create_stream(HUB_NAME, title: "test", publish_key: "werqwedsf", publish_se
 Pili.get_stream(stream_id)
 ```
 
+#### Get Stream Status
+
+```ruby
+# stream_id: string, required
+Pili.get_stream_status(stream_id)
+```
+
 #### Update Stream
 
 ```ruby
 # stream_id: string, required
 # publish_key: optional, a secret key for signing the <publishToken>
 # publish_security: optional, can be "dynamic" or "static", default is "dynamic"
-Pili.update_stream(stream_id, publish_key: "new_key", publish_security: "dynamic")
+# disabled: optional, can be true or false
+Pili.update_stream(stream_id, publish_key: "new_key", publish_security: "dynamic", disabled: true)
 ```
 
 #### Get Stream List

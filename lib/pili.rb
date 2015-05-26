@@ -52,12 +52,20 @@ module Pili
     end
 
 
+    def get_stream_status(stream_id)
+      url = Config.api_base_url + "/streams/#{stream_id}/status"
+      response = HTTP.api_get(url)
+      response.parsed_response
+    end
+
+
     def update_stream(stream_id, options = {})
       url = Config.api_base_url + "/streams/" + stream_id
 
       body = {
         :publishKey       => options[:publish_key],
         :publishSecurity  => options[:publish_security] == "static" ? "static" : "dynamic",
+        :disabled         => options[:disabled]
       }
 
       body.delete_if { |k, v| v.nil? }
