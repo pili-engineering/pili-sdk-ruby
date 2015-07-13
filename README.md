@@ -58,10 +58,10 @@ Or install it yourself as:
 ```ruby
 require 'pili'
 
-ACCESS_KEY = 'QiniuAccessKey';
-SECRETE_KEY = 'QiniuSecretKey';
+ACCESS_KEY = 'qiniu_access_key'
+SECRETE_KEY = 'qiniu_secret_key'
 
-HUB = 'hubName';
+HUB = 'hub_name'
 ```
 
 ### Client
