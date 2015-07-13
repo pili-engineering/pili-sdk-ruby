@@ -12,29 +12,25 @@
 
 ## Content
 
-- [Installation](#Installation)
-- [Usage](#Usage)
-  - [Configuration](#Configuration)
-  - [Client](#Client)
-    - [Create a Pili client](#Create-a-Pili-client)
-    - [Create a stream](#Create-a-stream)
-    - [Get a stream](#Get-a-stream)
-    - [List streams](#List-streams)
-  - [Stream](#Stream)
-      - [Update a stream](#Update-a-stream)
-    - [Delete a stream](#Delete-a-stream)
-    - [Get stream segments](#Get-stream-segments)
-    - [Get stream status](#Get-stream-status)
-    - [Generate RTMP publish URL](#Generate-RTMP-publish-URL)
-    - [Generate RTMP live play URL](#Generate-RTMP-live-play-URL)
-    - [Generate HLS live play URL](#Generate-HLS-live-play-URL)
-    - [Generate HLS playback URL](#Generate-HLS-playback-URL)
-    - [To JSON String](#To-JSON-String)
-- [History](#History)
-
-## Installaion
-
-Pili SDK for Ruby.
+- [Installation](#installation)
+- [Usage](#usage)
+  - [Configuration](#configuration)
+  - [Client](#client)
+    - [Create a Pili client](#create-a-pili-client)
+    - [Create a stream](#create-a-stream)
+    - [Get a stream](#get-a-stream)
+    - [List streams](#list-streams)
+  - [Stream](#stream)
+    - [Update a stream](#update-a-stream)
+    - [Delete a stream](#delete-a-stream)
+    - [Get stream segments](#get-stream-segments)
+    - [Get stream status](#get-stream-status)
+    - [Generate RTMP publish URL](#generate-rtmp-publish-url)
+    - [Generate RTMP live play URL](#generate-rtmp-live-play-urls)
+    - [Generate HLS live play URL](#generate-hls-live-play-url)
+    - [Generate HLS playback URL](#generate-hls-playback-url)
+    - [To JSON String](#to-json-string)
+- [History](#history)
 
 ## Installation
 
@@ -61,7 +57,7 @@ require 'pili'
 ACCESS_KEY = 'qiniu_access_key'
 SECRETE_KEY = 'qiniu_secret_key'
 
-HUB = 'hub_name'
+HUB_NAME = 'hub_name'
 ```
 
 ### Client
@@ -69,7 +65,7 @@ HUB = 'hub_name'
 #### Create a Pili client
 
 ```ruby
-client = Pili::Client.new(ACCESS_KEY, SECRETE_KEY, HUB)
+client = Pili::Client.new(ACCESS_KEY, SECRETE_KEY, HUB_NAME)
 ```
 
 #### Create a stream
@@ -78,7 +74,7 @@ client = Pili::Client.new(ACCESS_KEY, SECRETE_KEY, HUB)
 # title: optional, default is auto-generated
 # publish_key: optional, a secret key for signing the <publishToken>
 # publish_security: optional, can be "dynamic" or "static", default is "dynamic"
-client.create_stream(title: "test", publish_key: "werqwedsf", publish_security: "static")
+client.create_stream(title: "title", publish_key: "publish_key", publish_security: "static")
 ```
 
 #### Get a stream
@@ -91,10 +87,9 @@ client.get_stream(stream_id)
 #### List streams
 
 ```ruby
-# HUB_NAME: string, required
 # marker: string, optional
 # limit: integer, optional
-client.list_streams(HUB_NAME, marker: "marker", limit: 1000)
+client.list_streams(marker: "marker", limit: 1000)
 ```
 
 ### Stream
@@ -174,6 +169,6 @@ stream.to_json()
   - Update README
   - Update get milliseconds method
 - 0.0.1
-  - Init sdk
+  - Init SDK
   - Add Stream API
   - Add publish and play policy
