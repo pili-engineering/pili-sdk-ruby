@@ -157,3 +157,23 @@ stream.hls_playback_urls()
 stream.to_json()
 ```
 
+## History
+
+- 2.0.0
+  - Add Client, Stream class
+- 1.0.1
+  - Add get stream status method.
+  - Update update_stream method.
+- 1.0.0
+  - Update README create stream example code.
+- 0.1.3
+  - Update README create stream example code.
+- 0.1.2
+  - Fix stream list method parameter type.
+- 0.1.0
+  - Update README
+  - Update get milliseconds method
+- 0.0.1
+  - Init sdk
+  - Add Stream API
+  - Add publish and play policy
