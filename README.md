@@ -66,6 +66,7 @@ HUB_NAME = 'hub_name'
 
 ```ruby
 client = Pili::Client.new(ACCESS_KEY, SECRETE_KEY, HUB_NAME)
+# return client object...
 ```
 
 #### Create a stream
@@ -75,6 +76,7 @@ client = Pili::Client.new(ACCESS_KEY, SECRETE_KEY, HUB_NAME)
 # publish_key: optional, a secret key for signing the <publishToken>
 # publish_security: optional, can be "dynamic" or "static", default is "dynamic"
 client.create_stream(title: "title", publish_key: "publish_key", publish_security: "static")
+# return stream object...
 ```
 
 #### Get a stream
@@ -82,6 +84,7 @@ client.create_stream(title: "title", publish_key: "publish_key", publish_securit
 ```ruby
 # stream_id: string, required
 client.get_stream(stream_id)
+# return stream object...
 ```
 
 #### List streams
@@ -115,12 +118,28 @@ stream.delete()
 # start_second: integer, optional
 # end_second: integer, optional
 stream.segments(start_second, end_second)
+
+# [
+#   {
+#     "start": <StartSecond>,
+#     "end": <EndSecond>
+#   },
+#   {
+#     "start": <StartSecond>,
+#     "end": <EndSecond>
+#   },
+#   ...
+# ]
 ```
 
 #### Get stream status
 
 ```ruby
 stream.status()
+# {
+#   "addr": "106.187.43.211:51393",
+#   "status": "disconnected"
+# }
 ```
 
 #### Generate RTMP publish URL
