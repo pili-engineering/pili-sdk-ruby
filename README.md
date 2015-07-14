@@ -104,6 +104,7 @@ client.list_streams(marker: "marker", limit: 1000)
 # publish_security: optional, can be "dynamic" or "static", default is "dynamic"
 # disabled: optional, can be true or false
 stream.update(publish_key: "new_key", publish_security: "dynamic", disabled: true)
+# return updated stream object...
 ```
 
 #### Delete a stream
@@ -146,24 +147,43 @@ stream.status()
 
 ```ruby
 stream.rtmp_publish_url()
+# return a rtmp publish url, eg. "rtmp://test.qiniucdn.com/abcen/test?key=publish_test_key"
 ```
 
 #### Generate RTMP live play URLs
 
 ```ruby
 stream.rtmp_live_urls()
+# return rtmp live play urls, eg.
+# {
+#   "ORIGIN" => "rtmp://test.qiniucdn.com/abcen/test",
+#   "240p" => "rtmp://test.qiniucdn.com/abcen/test@240p",
+#   ...
+# }
 ```
 
 #### Generate HLS live play URLs
 
 ```ruby
 stream.hls_live_urls()
+# return hls live play urls, eg.
+# {
+#   "ORIGIN" => "http://test.qiniucdn.com/abcen/test.m3u8",
+#   "240p" => "http://test.qiniucdn.com/abcen/test@240p.m3u8"
+#   ...
+# }
 ```
 
 #### Generate HLS playback URLs
 
 ```ruby
-stream.hls_playback_urls()
+stream.hls_playback_urls(start_second, end_second)
+# return hls playback urls, eg.
+# {
+#   "ORIGIN" => "http://test.qiniucdn.com/abcen/test.m3u8?start=1436843430&end=1436846938",
+#   "240p" => "http://test.qiniucdn.com/abcen/test@240p.m3u8?start=1436843430&end=1436846938"
+#   ...
+# }
 ```
 
 #### To JSON String
