@@ -1,7 +1,36 @@
-# pili-ruby
-=========
+# Pili server-side library for Ruby
 
-Pili SDK for Ruby.
+## Features
+
+- [x] Stream operations (Create, Delete, Update, Get)
+- [x] Get Streams list
+- [x] Get Stream status
+- [x] Get Stream segments
+- [x] Generate RTMP publish URL
+- [x] Generate RTMP / HLS live play URL
+- [x] Generate HLS playback URL
+
+## Content
+
+- [Installation](#installation)
+- [Usage](#usage)
+  - [Configuration](#configuration)
+  - [Client](#client)
+    - [Create a Pili client](#create-a-pili-client)
+    - [Create a stream](#create-a-stream)
+    - [Get a stream](#get-a-stream)
+    - [List streams](#list-streams)
+  - [Stream](#stream)
+    - [Update a stream](#update-a-stream)
+    - [Delete a stream](#delete-a-stream)
+    - [Get stream segments](#get-stream-segments)
+    - [Get stream status](#get-stream-status)
+    - [Generate RTMP publish URL](#generate-rtmp-publish-url)
+    - [Generate RTMP live play URL](#generate-rtmp-live-play-urls)
+    - [Generate HLS live play URL](#generate-hls-live-play-url)
+    - [Generate HLS playback URL](#generate-hls-playback-url)
+    - [To JSON String](#to-json-string)
+- [History](#history)
 
 ## Installation
 
@@ -17,6 +46,7 @@ Or install it yourself as:
 
     $ gem install pili
 
+
 ## Usage
 
 ### Configuration
@@ -24,134 +54,160 @@ Or install it yourself as:
 ```ruby
 require 'pili'
 
-Pili.setup! access_key: '<YOUR_APP_ACCESS_KEY>',
-			secret_key: '<YOUR_APP_SECRET_KEY>'
+ACCESS_KEY = 'qiniu_access_key'
+SECRETE_KEY = 'qiniu_secret_key'
+
+HUB_NAME = 'hub_name'
 ```
 
-#### with rails:
+### Client
 
-You'll need to configure it in config/initializes/pili.rb
-
-
-### Example
+#### Create a Pili client
 
 ```ruby
-# Replace with your customized domains
-RTMP_PUBLISH_HOST = "xxx.pub.z1.pili.qiniup.com"
-RTMP_PLAY_HOST 	  = "xxx.live1.z1.pili.qiniucdn.com"
-HLS_PLAY_HOST     = "xxx.hls1.z1.pili.qiniucdn.com"
-
-# Replace with your hub name
-HUB_NAME = "hub_name"
+client = Pili::Client.new(ACCESS_KEY, SECRETE_KEY, HUB_NAME)
+# return client object...
 ```
 
-
-#### Create Stream
+#### Create a stream
 
 ```ruby
-# HUB_NAME: string, required
 # title: optional, default is auto-generated
 # publish_key: optional, a secret key for signing the <publishToken>
 # publish_security: optional, can be "dynamic" or "static", default is "dynamic"
-Pili.create_stream(HUB_NAME, title: "test", publish_key: "werqwedsf", publish_security: "static")
+client.create_stream(title: "title", publish_key: "publish_key", publish_security: "static")
+# return stream object...
 ```
 
-#### Get Stream
+#### Get a stream
 
 ```ruby
 # stream_id: string, required
-Pili.get_stream(stream_id)
+client.get_stream(stream_id)
+# return stream object...
 ```
 
-#### Get Stream Status
+#### List streams
 
 ```ruby
-# stream_id: string, required
-Pili.get_stream_status(stream_id)
+# marker: string, optional
+# limit: integer, optional
+client.list_streams(marker: "marker", limit: 1000)
 ```
 
-#### Update Stream
+### Stream
+
+#### Update a stream
 
 ```ruby
-# stream_id: string, required
 # publish_key: optional, a secret key for signing the <publishToken>
 # publish_security: optional, can be "dynamic" or "static", default is "dynamic"
 # disabled: optional, can be true or false
-Pili.update_stream(stream_id, publish_key: "new_key", publish_security: "dynamic", disabled: true)
+stream.update(publish_key: "new_key", publish_security: "dynamic", disabled: true)
+# return updated stream object...
 ```
 
-#### Get Stream List
+#### Delete a stream
 
 ```ruby
-# HUB_NAME: string, required
-# marker: string, optional
-# limit: integer, optional
-Pili.stream_list(HUB_NAME, marker: "marker", limit: 50)
+stream.delete()
 ```
 
-#### Delete Stream
+#### Get stream segments
 
 ```ruby
-# stream_id: string, required
-Pili.delete_stream(stream_id)
+# start_second: integer, optional
+# end_second: integer, optional
+stream.segments(start_second, end_second)
+
+# [
+#   {
+#     "start": <StartSecond>,
+#     "end": <EndSecond>
+#   },
+#   {
+#     "start": <StartSecond>,
+#     "end": <EndSecond>
+#   },
+#   ...
+# ]
 ```
 
-#### Get Stream Segments
+#### Get stream status
 
 ```ruby
-# stream_id: string, required
-# start_second, end_second: integer, optional
-Pili.get_stream_segments(stream_id, start_second: 1429678551, end_second: 1429689551)
+stream.status()
+# {
+#   "addr": "106.187.43.211:51393",
+#   "status": "disconnected"
+# }
 ```
 
-#### Get Stream Publish URL
+#### Generate RTMP publish URL
 
 ```ruby
-# RTMP_PUBLISH_HOST, string, required
-# stream_id: string, required
-# publish_key: string, required
-# publish_security: string, required
-# nonce: unix timestamp, optional
-Pili.get_stream_publish_url(RTMP_PUBLISH_HOST, stream_id, publish_key, publish_security, nonce)
+stream.rtmp_publish_url()
+# return a rtmp publish url, eg. "rtmp://test.qiniucdn.com/hubname/test?key=publish_test_key"
 ```
 
-#### Get Stream RTMP Live URL
+#### Generate RTMP live play URLs
 
 ```ruby
-# RTMP_PLAY_HOST, string, required
-# stream_id: string, required
-# profile: string, optional
-Pili.get_stream_rtmp_live_url(RTMP_PLAY_HOST, stream_id, profile)
+stream.rtmp_live_urls()
+# return rtmp live play urls, eg.
+# {
+#   "ORIGIN" => "rtmp://test.qiniucdn.com/hubname/test",
+#   "240p" => "rtmp://test.qiniucdn.com/hubname/test@240p",
+#   ...
+# }
 ```
 
-#### Get Stream HLS Live URL
+#### Generate HLS live play URLs
 
 ```ruby
-# HLS_PLAY_HOST, string, required
-# stream_id: string, required
-# profile: string, optional
-Pili.get_stream_hls_live_url(HLS_PLAY_HOST, stream_id, profile)
+stream.hls_live_urls()
+# return hls live play urls, eg.
+# {
+#   "ORIGIN" => "http://test.qiniucdn.com/hubname/test.m3u8",
+#   "240p" => "http://test.qiniucdn.com/hubname/test@240p.m3u8"
+#   ...
+# }
 ```
 
-#### Get Stream HLS Playback URL
+#### Generate HLS playback URLs
 
 ```ruby
-# HLS_PLAY_HOST, string, required
-# stream_id: string, required
-# start_second, end_second: integer, required
-# profile: string, optional
-Pili.get_stream_hls_playback_url(HLS_PLAY_HOST, stream_id, start_second, end_second, profile)
+stream.hls_playback_urls(start_second, end_second)
+# return hls playback urls, eg.
+# {
+#   "ORIGIN" => "http://test.qiniucdn.com/hubname/test.m3u8?start=1436843430&end=1436846938",
+#   "240p" => "http://test.qiniucdn.com/hubname/test@240p.m3u8?start=1436843430&end=1436846938"
+#   ...
+# }
 ```
 
+#### To JSON String
+```ruby
+stream.to_json()
+```
 
-## Contributing
+## History
 
-1. Fork it
-2. Create your feature branch (`git checkout -b my-new-feature`)
-3. Commit your changes (`git commit -am 'Added some feature'`)
-4. Push to the branch (`git push origin my-new-feature`)
-5. Create new Pull Request
-
-## Contributors
-
-See the [Contributors List](https://github.com/pili-io/pili-sdk-ruby/graphs/contributors).
+- 2.0.0
+  - Add Client, Stream class
+- 1.0.1
+  - Add get stream status method.
+  - Update update_stream method.
+- 1.0.0
+  - Update README create stream example code.
+- 0.1.3
+  - Update README create stream example code.
+- 0.1.2
+  - Fix stream list method parameter type.
+- 0.1.0
+  - Update README
+  - Update get milliseconds method
+- 0.0.1
+  - Init SDK
+  - Add Stream API
+  - Add publish and play policy
