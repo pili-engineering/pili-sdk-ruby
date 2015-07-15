@@ -147,7 +147,7 @@ stream.status()
 
 ```ruby
 stream.rtmp_publish_url()
-# return a rtmp publish url, eg. "rtmp://test.qiniucdn.com/abcen/test?key=publish_test_key"
+# return a rtmp publish url, eg. "rtmp://test.qiniucdn.com/hubname/test?key=publish_test_key"
 ```
 
 #### Generate RTMP live play URLs
@@ -156,8 +156,8 @@ stream.rtmp_publish_url()
 stream.rtmp_live_urls()
 # return rtmp live play urls, eg.
 # {
-#   "ORIGIN" => "rtmp://test.qiniucdn.com/abcen/test",
-#   "240p" => "rtmp://test.qiniucdn.com/abcen/test@240p",
+#   "ORIGIN" => "rtmp://test.qiniucdn.com/hubname/test",
+#   "240p" => "rtmp://test.qiniucdn.com/hubname/test@240p",
 #   ...
 # }
 ```
@@ -168,8 +168,8 @@ stream.rtmp_live_urls()
 stream.hls_live_urls()
 # return hls live play urls, eg.
 # {
-#   "ORIGIN" => "http://test.qiniucdn.com/abcen/test.m3u8",
-#   "240p" => "http://test.qiniucdn.com/abcen/test@240p.m3u8"
+#   "ORIGIN" => "http://test.qiniucdn.com/hubname/test.m3u8",
+#   "240p" => "http://test.qiniucdn.com/hubname/test@240p.m3u8"
 #   ...
 # }
 ```
@@ -180,8 +180,8 @@ stream.hls_live_urls()
 stream.hls_playback_urls(start_second, end_second)
 # return hls playback urls, eg.
 # {
-#   "ORIGIN" => "http://test.qiniucdn.com/abcen/test.m3u8?start=1436843430&end=1436846938",
-#   "240p" => "http://test.qiniucdn.com/abcen/test@240p.m3u8?start=1436843430&end=1436846938"
+#   "ORIGIN" => "http://test.qiniucdn.com/hubname/test.m3u8?start=1436843430&end=1436846938",
+#   "240p" => "http://test.qiniucdn.com/hubname/test@240p.m3u8?start=1436843430&end=1436846938"
 #   ...
 # }
 ```
