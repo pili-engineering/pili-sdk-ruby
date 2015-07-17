@@ -75,6 +75,8 @@ client = Pili::Client.new(ACCESS_KEY, SECRETE_KEY, HUB_NAME)
 # title: optional, default is auto-generated
 # publish_key: optional, a secret key for signing the <publishToken>
 # publish_security: optional, can be "dynamic" or "static", default is "dynamic"
+client.create_stream()
+# or
 client.create_stream(title: "title", publish_key: "publish_key", publish_security: "static")
 # return stream object...
 ```
@@ -118,7 +120,9 @@ stream.delete()
 ```ruby
 # start_second: integer, optional
 # end_second: integer, optional
-stream.segments(start_second, end_second)
+stream.segments()
+# or
+stream.segments(start_time, end_time)
 
 # [
 #   {
@@ -153,13 +157,16 @@ stream.rtmp_publish_url()
 #### Generate RTMP live play URLs
 
 ```ruby
-stream.rtmp_live_urls()
+urls = stream.rtmp_live_urls()
 # return rtmp live play urls, eg.
 # {
 #   "ORIGIN" => "rtmp://test.qiniucdn.com/hubname/test",
 #   "240p" => "rtmp://test.qiniucdn.com/hubname/test@240p",
 #   ...
 # }
+
+# Get original RTMP live url
+original_url = urls['ORIGIN']
 ```
 
 #### Generate HLS live play URLs
@@ -172,18 +179,24 @@ stream.hls_live_urls()
 #   "240p" => "http://test.qiniucdn.com/hubname/test@240p.m3u8"
 #   ...
 # }
+
+# Get original HLS live url
+original_url = urls['ORIGIN']
 ```
 
 #### Generate HLS playback URLs
 
 ```ruby
-stream.hls_playback_urls(start_second, end_second)
+stream.hls_playback_urls(start_time, end_time)
 # return hls playback urls, eg.
 # {
 #   "ORIGIN" => "http://test.qiniucdn.com/hubname/test.m3u8?start=1436843430&end=1436846938",
 #   "240p" => "http://test.qiniucdn.com/hubname/test@240p.m3u8?start=1436843430&end=1436846938"
 #   ...
 # }
+
+# Get original HLS playback url
+var original_url = urls['ORIGIN']
 ```
 
 #### To JSON String
@@ -193,7 +206,7 @@ stream.to_json()
 
 ## History
 
-- 2.0.0
+- 1.2.0
   - Add Client, Stream class
 - 1.0.1
   - Add get stream status method.
