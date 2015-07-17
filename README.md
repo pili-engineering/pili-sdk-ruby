@@ -196,7 +196,7 @@ stream.hls_playback_urls(start_time, end_time)
 # }
 
 # Get original HLS playback url
-var original_url = urls['ORIGIN']
+original_url = urls['ORIGIN']
 ```
 
 #### To JSON String
