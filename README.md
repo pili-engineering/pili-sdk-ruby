@@ -30,6 +30,7 @@
     - [Generate HLS live play URL](#generate-hls-live-play-url)
     - [Generate HLS playback URL](#generate-hls-playback-url)
     - [To JSON String](#to-json-string)
+    - [Save Stream as](#save-stream-as)
 - [History](#history)
 
 ## Installation
@@ -118,8 +119,8 @@ stream.delete()
 #### Get stream segments
 
 ```ruby
-# start_second: integer, optional
-# end_second: integer, optional
+# start_time: optional, integer, in second, unix timestamp
+# end_time:   optional, integer, in second, unix timestamp
 stream.segments()
 # or
 stream.segments(start_time, end_time)
@@ -187,6 +188,8 @@ original_url = urls['ORIGIN']
 #### Generate HLS playback URLs
 
 ```ruby
+# start_time: optional, integer, in second, unix timestamp
+# end_time:   optional, integer, in second, unix timestamp
 stream.hls_playback_urls(start_time, end_time)
 # return hls playback urls, eg.
 # {
@@ -203,6 +206,20 @@ original_url = urls['ORIGIN']
 ```ruby
 stream.to_json()
 ```
+
+#### Save Stream as
+```ruby
+# name       = "fileName" # required, string
+# format     = "mp4"      # required, string
+# start_time = 1439121809 # required, int64, in second, unix timestamp
+# end_time   = 1439125409 # required, int64, in second, unix timestamp
+# options = {
+  :notify_url => "http://remote_callback_url"
+} #optional
+
+stream.save_as(name, format, start_time, end_time, options = {})
+```
+
 
 ## History
 
