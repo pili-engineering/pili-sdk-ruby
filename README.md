@@ -214,8 +214,8 @@ stream.to_json()
 # start_time = 1439121809 # required, int64, in second, unix timestamp
 # end_time   = 1439125409 # required, int64, in second, unix timestamp
 # options = {
-  :notify_url => "http://remote_callback_url"
-} #optional
+#   :notify_url => "http://remote_callback_url"
+# } #optional
 
 stream.save_as(name, format, start_time, end_time, options = {})
 
