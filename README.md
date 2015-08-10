@@ -217,7 +217,7 @@ stream.to_json()
 #   :notify_url => "http://remote_callback_url"
 # } #optional
 
-stream.save_as(name, format, start_time, end_time, options = {})
+stream.save_as(name, format, start_time, end_time, options)
 
 # return a dictionary:
 # {
