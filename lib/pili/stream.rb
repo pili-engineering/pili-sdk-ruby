@@ -137,5 +137,21 @@ module Pili
       }.to_json
     end
 
+
+    def save_as(name, format, start_time, end_time, options = {})
+      url = Config.api_base_url + "/streams/" + @id + "/saveas"
+
+      body = {}
+      body[:name]      = name
+      body[:start]     = start_time
+      body[:end]       = end_time
+      body[:format]    = format
+      body[:notifyUrl] = options[:notify_url]
+
+      body.delete_if { |k, v| v.nil? }
+
+      API.post(@client.access_key, @client.secret_key, url, body)
+    end
+
   end
 end

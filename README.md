@@ -26,10 +26,11 @@
     - [Get stream segments](#get-stream-segments)
     - [Get stream status](#get-stream-status)
     - [Generate RTMP publish URL](#generate-rtmp-publish-url)
-    - [Generate RTMP live play URL](#generate-rtmp-live-play-urls)
-    - [Generate HLS live play URL](#generate-hls-live-play-url)
-    - [Generate HLS playback URL](#generate-hls-playback-url)
+    - [Generate RTMP live play URLs](#generate-rtmp-live-play-urls)
+    - [Generate HLS live play URLs](#generate-hls-live-play-urls)
+    - [Generate HLS playback URLs](#generate-hls-playback-urls)
     - [To JSON String](#to-json-string)
+    - [Save Stream as](#save-stream-as)
 - [History](#history)
 
 ## Installation
@@ -118,8 +119,8 @@ stream.delete()
 #### Get stream segments
 
 ```ruby
-# start_second: integer, optional
-# end_second: integer, optional
+# start_time: optional, integer, in second, unix timestamp
+# end_time:   optional, integer, in second, unix timestamp
 stream.segments()
 # or
 stream.segments(start_time, end_time)
@@ -187,6 +188,8 @@ original_url = urls['ORIGIN']
 #### Generate HLS playback URLs
 
 ```ruby
+# start_time: optional, integer, in second, unix timestamp
+# end_time:   optional, integer, in second, unix timestamp
 stream.hls_playback_urls(start_time, end_time)
 # return hls playback urls, eg.
 # {
@@ -204,8 +207,34 @@ original_url = urls['ORIGIN']
 stream.to_json()
 ```
 
-## History
+#### Save Stream as
+```ruby
+# name       = "fileName" # required, string
+# format     = "mp4"      # required, string
+# start_time = 1439121809 # required, int64, in second, unix timestamp
+# end_time   = 1439125409 # required, int64, in second, unix timestamp
+# options = {
+#   :notify_url => "http://remote_callback_url"
+# } #optional
 
+stream.save_as(name, format, start_time, end_time, options)
+
+# return a dictionary:
+# {
+#   "url": "<m3u8Url>",
+#   "targetUrl": "<TargetFileUrl>",
+#   "persistentId": <PersistentId>
+# }
+#
+# You can get saving state via Qiniu fop service using persistentId.
+# API: `curl -D GET http://api.qiniu.com/status/get/prefop?id=<PersistentId>`
+# Doc reference: `http://developer.qiniu.com/docs/v6/api/overview/fop/persistent-fop.html#pfop-status`
+```
+
+
+## History
+- 1.3.0
+  - Add stream saveas function
 - 1.2.0
   - Add Client, Stream class
 - 1.0.1
