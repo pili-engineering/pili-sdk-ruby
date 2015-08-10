@@ -218,11 +218,23 @@ stream.to_json()
 } #optional
 
 stream.save_as(name, format, start_time, end_time, options = {})
+
+# return a dictionary:
+# {
+#   "url": "<m3u8Url>",
+#   "targetUrl": "<TargetFileUrl>",
+#   "persistentId": <PersistentId>
+# }
+#
+# You can get saving state via Qiniu fop service using persistentId.
+# API: `curl -D GET http://api.qiniu.com/status/get/prefop?id=<PersistentId>`
+# Doc reference: `http://developer.qiniu.com/docs/v6/api/overview/fop/persistent-fop.html#pfop-status`
 ```
 
 
 ## History
-
+- 1.3.0
+  - Add stream saveas function
 - 1.2.0
   - Add Client, Stream class
 - 1.0.1
