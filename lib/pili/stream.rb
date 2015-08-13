@@ -76,7 +76,7 @@ module Pili
       if @publish_security == "static"
         return "rtmp://#{rtmp_publish_host}/#{@hub}/#{@title}?key=#{@publish_key}"
       else
-        nonce = (Time.now.to_f * 1000.0).to_i
+        nonce = Time.now.to_i
         token = Auth.sign(publish_key, "/#{@hub}/#{@title}?nonce=#{nonce}")
         return "rtmp://#{rtmp_publish_host}/#{@hub}/#{@title}?nonce=#{nonce}&token=#{token}"
       end
