@@ -84,12 +84,25 @@ module Pili
 
 
     def rtmp_live_urls
-      rtmp_play_host = @hosts["play"]["rtmp"]
+      live_rtmp_host = @hosts["live"]["rtmp"]
 
-      urls = { LIVE_URL_ORIGIN_KEY => "rtmp://#{rtmp_play_host}/#{@hub}/#{@title}" }
+      urls = { LIVE_URL_ORIGIN_KEY => "rtmp://#{live_rtmp_host}/#{@hub}/#{@title}" }
 
       @profiles.each do |profile|
-        urls[profile] = "rtmp://#{rtmp_play_host}/#{@hub}/#{@title}@#{profile}"
+        urls[profile] = "rtmp://#{live_rtmp_host}/#{@hub}/#{@title}@#{profile}"
+      end
+
+      urls
+    end
+
+
+    def http_flv_live_urls
+      live_http_host = @hosts["live"]["http"]
+
+      urls = { LIVE_URL_ORIGIN_KEY => "http://#{live_http_host}/#{@hub}/#{@title}.flv" }
+
+      @profiles.each do |profile|
+        urls[profile] = "http://#{live_http_host}/#{@hub}/#{@title}@#{profile}.flv"
       end
 
       urls
@@ -97,12 +110,12 @@ module Pili
 
 
     def hls_live_urls
-      hls_play_host = @hosts["play"]["hls"]
+      live_http_host = @hosts["live"]["http"]
 
-      urls = { LIVE_URL_ORIGIN_KEY => "http://#{hls_play_host}/#{@hub}/#{@title}.m3u8" }
+      urls = { LIVE_URL_ORIGIN_KEY => "http://#{live_http_host}/#{@hub}/#{@title}.m3u8" }
 
       @profiles.each do |profile|
-        urls[profile] = "http://#{hls_play_host}/#{@hub}/#{@title}@#{profile}.m3u8"
+        urls[profile] = "http://#{live_http_host}/#{@hub}/#{@title}@#{profile}.m3u8"
       end
 
       urls
@@ -110,12 +123,12 @@ module Pili
 
 
     def hls_playback_urls(start_second, end_second)
-      hls_play_host = @hosts["play"]["hls"]
+      playback_http_host = @hosts["playback"]["http"]
 
-      urls = { LIVE_URL_ORIGIN_KEY => "http://#{hls_play_host}/#{@hub}/#{@title}.m3u8?start=#{start_second}&end=#{end_second}" }
+      urls = { LIVE_URL_ORIGIN_KEY => "http://#{playback_http_host}/#{@hub}/#{@title}.m3u8?start=#{start_second}&end=#{end_second}" }
 
       @profiles.each do |profile|
-        urls[profile] = "http://#{hls_play_host}/#{@hub}/#{@title}@#{profile}.m3u8?start=#{start_second}&end=#{end_second}"
+        urls[profile] = "http://#{playback_http_host}/#{@hub}/#{@title}@#{profile}.m3u8?start=#{start_second}&end=#{end_second}"
       end
 
       urls
@@ -151,6 +164,16 @@ module Pili
       body.delete_if { |k, v| v.nil? }
 
       API.post(@client.access_key, @client.secret_key, url, body)
+    end
+
+
+    def enable
+      update disabled: false
+    end
+
+
+    def disable
+      update disabled: true
     end
 
   end
