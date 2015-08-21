@@ -176,5 +176,20 @@ module Pili
       update disabled: true
     end
 
+
+    def snapshot(name, format, options = {})
+      url = Config.api_base_url + "/streams/" + @id + '/snapshot'
+
+      body = {}
+      body[:name]      = name
+      body[:format]    = format
+      body[:time]      = time
+      body[:notifyUrl] = options[:notify_url]
+
+      body.delete_if { |k, v| v.nil? }
+
+      API.post(@client.access_key, @client.secret_key, url, body)
+    end
+
   end
 end
