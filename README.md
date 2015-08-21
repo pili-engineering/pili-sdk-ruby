@@ -31,6 +31,9 @@
     - [Generate HLS playback URLs](#generate-hls-playback-urls)
     - [To JSON String](#to-json-string)
     - [Save Stream as](#save-stream-as)
+    - [Enable](#enable)
+    - [Disable](#disable)
+    - [Snapshot](#snapshot)
 - [History](#history)
 
 ## Installation
@@ -231,8 +234,40 @@ stream.save_as(name, format, start_time, end_time, options)
 # Doc reference: `http://developer.qiniu.com/docs/v6/api/overview/fop/persistent-fop.html#pfop-status`
 ```
 
+#### Enable
+```ruby
+stream.enable()
+```
+
+#### Disable
+```ruby
+stream.disable()
+```
+
+#### Snapshot
+```ruby
+# name       = "fileName" # required, string
+# format     = "jpg"      # required, string
+# options = {
+#   :time       => 1439125409                   # optional, int64, in second, unix timestamp
+#   :notify_url => "http://remote_callback_url" # optional
+# }
+
+stream.snapshot(name, format, options)
+
+# return a dictionary:
+# {
+#   "targetUrl": "<TargetUrl>",
+#   "persistentId": <persistentId>
+# }
+```
 
 ## History
+- 1.4.0
+  - Add get stream http flv live urls function feature
+  - Add stream disable function feature
+  - Add stream enable function feature
+  - Add stream snapshot function feature
 - 1.3.0
   - Add stream saveas function
 - 1.2.0
