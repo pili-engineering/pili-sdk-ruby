@@ -40,6 +40,7 @@ module Pili
 
       url += "&marker=#{options[:marker]}" unless Utils.blank?(options[:marker])
       url += "&limit=#{options[:limit]}"   if options[:limit].is_a?(Fixnum)
+      url += "&title=#{options[:title]}"   unless Utils.blank?(options[:title])
 
       API.get(@access_key, @secret_key, url)
     end

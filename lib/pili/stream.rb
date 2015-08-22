@@ -64,6 +64,7 @@ module Pili
 
       url += "?start=#{options[:start]}" if options[:start].is_a?(Fixnum)
       url += "&end=#{options[:end]}"     if options[:end].is_a?(Fixnum)
+      url += "&limit=#{options[:limit]}" if options[:limit].is_a?(Fixnum)
 
       response = API.get(@client.access_key, @client.secret_key, url)
       response["segments"] || []
@@ -151,15 +152,15 @@ module Pili
     end
 
 
-    def save_as(name, format, start_time, end_time, options = {})
+    def save_as(name, format, start_time, end_time, notify_url = nil)
       url = Config.api_base_url + "/streams/" + @id + "/saveas"
 
       body = {}
       body[:name]      = name
+      body[:format]    = format
       body[:start]     = start_time
       body[:end]       = end_time
-      body[:format]    = format
-      body[:notifyUrl] = options[:notify_url]
+      body[:notifyUrl] = notify_url
 
       body.delete_if { |k, v| v.nil? }
 
@@ -183,7 +184,7 @@ module Pili
       body = {}
       body[:name]      = name
       body[:format]    = format
-      body[:time]      = time
+      body[:time]      = options[:time]
       body[:notifyUrl] = options[:notify_url]
 
       body.delete_if { |k, v| v.nil? }
