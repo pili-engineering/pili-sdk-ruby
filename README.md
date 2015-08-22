@@ -73,7 +73,8 @@ Pili::Config.init api_host: API_HOST
 
 ```ruby
 # Instantiate an Pili Hub
-hub = Pili::Hub.new(ACCESS_KEY, SECRETE_KEY, HUB_NAME)
+credentials = Pili::Credentials.new(ACCESS_KEY, SECRETE_KEY)
+hub = Pili::Hub.new(credentials, HUB_NAME)
 puts "Hub initialize =>\n#{hub.inspect}\n\n"
 ```
 
