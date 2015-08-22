@@ -5,8 +5,8 @@ module Pili
     attr_reader :credentials, :hub_name
 
 
-    def initialize(access_key, secret_key, hub_name)
-      @credentials = Credentials.new access_key, secret_key
+    def initialize(credentials, hub_name)
+      @credentials = credentials
       @hub_name   = hub_name
     end
 
