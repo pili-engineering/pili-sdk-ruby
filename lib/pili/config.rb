@@ -3,20 +3,18 @@ module Pili
   module Config
     class << self
 
-      API_SCHEME  = "http"
-      API_HOST    = "pili.qiniuapi.com"
-      API_VERSION = "v1"
+      @@settings = {
+        :api_scheme  => "http",
+        :api_host    => "pili.qiniuapi.com",
+        :api_version => "v1"
+      }
 
-      # def init(options = {})
-      #   @settings = DEFAULT_OPTIONS.merge!(options)
-      #   REQUIRED_OPTION_KEYS.each do |opt|
-      #     raise("You did not provide both required args. Please provide the #{opt}.") unless @settings.has_key?(opt)
-      #   end
-      #   @settings
-      # end
+      def init(options = {})
+        @@settings.merge!(options)
+      end
 
       def api_base_url
-        "#{API_SCHEME}://#{API_HOST}/#{API_VERSION}"
+        "#{@@settings[:api_scheme]}://#{@@settings[:api_host]}/#{@@settings[:api_version]}"
       end
 
     end
