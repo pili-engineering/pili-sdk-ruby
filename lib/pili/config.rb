@@ -6,7 +6,8 @@ module Pili
       @@settings = {
         :api_scheme  => "http",
         :api_host    => "pili.qiniuapi.com",
-        :api_version => "v1"
+        :api_version => "v1",
+        :origin  => "ORIGIN"
       }
 
       def init(options = {})
@@ -15,6 +16,10 @@ module Pili
 
       def api_base_url
         "#{@@settings[:api_scheme]}://#{@@settings[:api_host]}/#{@@settings[:api_version]}"
+      end
+
+      def origin
+        @@settings[:origin]
       end
 
     end

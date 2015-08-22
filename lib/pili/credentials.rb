@@ -4,7 +4,17 @@ require 'base64'
 require 'uri'
 
 module Pili
-  module Auth
+  class Credentials
+
+    attr_reader :access_key, :secret_key
+
+
+    def initialize(access_key, secret_key)
+      @access_key = access_key
+      @secret_key = secret_key
+    end
+
+
     class << self
 
       def base64_url_encode(string)

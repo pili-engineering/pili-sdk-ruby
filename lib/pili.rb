@@ -4,12 +4,13 @@ require 'httparty'
 require "pili/version"
 
 module Pili
-  autoload :Auth,          'pili/auth'
+  autoload :Credentials,   'pili/credentials'
   autoload :Config,        'pili/config'
+  autoload :RPC,           'pili/rpc'
   autoload :API,           'pili/api'
   autoload :Utils,         'pili/utils'
   autoload :ResponseError, 'pili/exceptions'
 
-  autoload :Client,        'pili/client'
+  autoload :Hub,           'pili/hub'
   autoload :Stream,        'pili/stream'
 end
