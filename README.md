@@ -15,25 +15,25 @@
 - [Installation](#installation)
 - [Usage](#usage)
   - [Configuration](#configuration)
-  - [Client](#client)
-    - [Create a Pili client](#create-a-pili-client)
-    - [Create a stream](#create-a-stream)
+  - [Hub](#hub)
+    - [Create a Pili Hub](#create-a-pili-hub)
+    - [Create a new Stream](#create-a-new-stream)
     - [Get a stream](#get-a-stream)
     - [List streams](#list-streams)
   - [Stream](#stream)
-    - [Update a stream](#update-a-stream)
-    - [Delete a stream](#delete-a-stream)
-    - [Get stream segments](#get-stream-segments)
-    - [Get stream status](#get-stream-status)
+    - [To JSON String](#to-json-string)
+    - [Update a Stream](#update-a-stream)
+    - [Disable a Stream](#disable-a-stream)
+    - [Enable a Stream](#enable-a-stream)
     - [Generate RTMP publish URL](#generate-rtmp-publish-url)
     - [Generate RTMP live play URLs](#generate-rtmp-live-play-urls)
     - [Generate HLS live play URLs](#generate-hls-live-play-urls)
+    - [Generate HTTP-FLV live play URLs](#generate-http-flv-live-play-urls)
+    - [Get stream segments](#get-stream-segments)
     - [Generate HLS playback URLs](#generate-hls-playback-urls)
-    - [To JSON String](#to-json-string)
-    - [Save Stream as](#save-stream-as)
-    - [Enable](#enable)
-    - [Disable](#disable)
     - [Snapshot](#snapshot)
+    - [Save Stream as](#save-stream-as)
+    - [Delete a stream](#delete-a-stream)
 - [History](#history)
 
 ## Installation
@@ -58,212 +58,456 @@ Or install it yourself as:
 ```ruby
 require 'pili'
 
-ACCESS_KEY = 'qiniu_access_key'
-SECRETE_KEY = 'qiniu_secret_key'
+API_HOST = 'pili-lte.qiniuapi.com'
+
+ACCESS_KEY = 'Qiniu_AccessKey'
+SECRETE_KEY = 'Qiniu_SecretKey'
 
 HUB_NAME = 'hub_name'
+
+Pili::Config.init api_host: API_HOST
 ```
 
-### Client
 
-#### Create a Pili client
+## Hub
 
 ```ruby
-client = Pili::Client.new(ACCESS_KEY, SECRETE_KEY, HUB_NAME)
-# return client object...
+# Instantiate an Pili Hub
+hub = Pili::Hub.new(ACCESS_KEY, SECRETE_KEY, HUB_NAME)
+puts "Hub initialize =>\n#{hub.inspect}\n\n"
 ```
 
-#### Create a stream
 
+### Create a new Stream
 ```ruby
-# title: optional, default is auto-generated
-# publish_key: optional, a secret key for signing the <publishToken>
-# publish_security: optional, can be "dynamic" or "static", default is "dynamic"
-client.create_stream()
-# or
-client.create_stream(title: "title", publish_key: "publish_key", publish_security: "static")
-# return stream object...
+begin
+  title = nil # optional, default is auto-generated
+  publish_key = nil # optional, a secret key for signing the <publishToken>
+  publish_security = nil # optional, can be "dynamic" or "static", default is "dynamic"
+
+  # stream = hub.create_stream()
+  stream = hub.create_stream(title: title, publish_key: publish_key, publish_security: publish_security)
+  puts "Hub create_stream() =>\n#{stream.inspect}\n\n"
+rescue Exception => e
+  puts "Hub create_stream() failed. Caught exception:\n#{e.http_body}\n\n"
+end
+
+##<Pili::Stream:0x007fdf9413ab98
+#  @credentials=#<Pili::Credentials:0x007fdf939392c8 @access_key="0QxleRjH-IGYystrYdeY5w6KdkSdJVa5SaBUbJkY", @secret_key="Vg3u2240H6JL78sfjsgLohGLjk_jO5e0cdief0g3">,
+#  @id="z1.hub_name.55d886b5e3ba571322003121",
+#  @title="55d886b5e3ba571322003121",
+#  @hub="hub_name",
+#  @publish_key="0e18061751841053",
+#  @publish_security="dynamic",
+#  @disabled=false,
+#  @hosts={
+#    "publish"=>{
+#      "rtmp"=>"eksg7h.pub.z0.pili.qiniup.com"
+#    },
+#    "live"=>{
+#      "http"=>"eksg7h.live1-http.z1.pili.qiniucdn.com",
+#      "rtmp"=>"eksg7h.live1-rtmp.z1.pili.qiniucdn.com"
+#    },
+#    "playback"=>{
+#      "http"=>"eksg7h.hls.z0.pili.qiniucdn.com"
+#    },
+#    "play"=>{
+#      "hls"=>"eksg7h.live1-http.z1.pili.qiniucdn.com",
+#      "rtmp"=>"eksg7h.live1-rtmp.z1.pili.qiniucdn.com"
+#    }
+#  },
+#  @created_at="2015-08-22T14:27:01.62Z",
+#  @updated_at="2015-08-22T14:27:01.62Z"
+#>
 ```
 
-#### Get a stream
 
+### Get a Stream
 ```ruby
-# stream_id: string, required
-client.get_stream(stream_id)
-# return stream object...
+begin
+  stream = hub.get_stream(stream.id)
+  puts "Hub get_stream() =>\n#{stream.inspect}\n\n"
+rescue Exception => e
+  puts "Hub get_stream() failed. Caught exception:\n#{e.http_body}\n\n"
+end
+
+##<Pili::Stream:0x007fdf6413ab67
+#  @credentials=#<Pili::Credentials:0x007fdf939c2238 @access_key="0QxleRjH-IGYystrYdeY5w6KdkSdJVa5SaBUbJkY", @secret_key="Vg3u2240H6JL78sfjsgLohGLjk_jO5e0cdief0g3">,
+#  @id="z1.hub_name.55d886b5e3ba571322003121",
+#  @title="55d886b5e3ba571322003121",
+#  @hub="hub_name",
+#  @publish_key="0e18061751841053",
+#  @publish_security="dynamic",
+#  @disabled=false,
+#  @hosts={
+#    "publish"=>{
+#      "rtmp"=>"eksg7h.pub.z0.pili.qiniup.com"
+#    },
+#    "live"=>{
+#      "http"=>"eksg7h.live1-http.z1.pili.qiniucdn.com",
+#      "rtmp"=>"eksg7h.live1-rtmp.z1.pili.qiniucdn.com"
+#    },
+#    "playback"=>{
+#      "http"=>"eksg7h.hls.z0.pili.qiniucdn.com"
+#    },
+#    "play"=>{
+#      "hls"=>"eksg7h.live1-http.z1.pili.qiniucdn.com",
+#      "rtmp"=>"eksg7h.live1-rtmp.z1.pili.qiniucdn.com"
+#    }
+#  },
+#  @created_at="2015-08-22T14:27:01.62Z",
+#  @updated_at="2015-08-22T14:27:01.62Z"
+#>
 ```
 
-#### List streams
 
+### List streams
 ```ruby
-# marker: string, optional
-# limit: integer, optional
-client.list_streams(marker: "marker", limit: 1000)
+begin
+  marker = nil # optional
+  limit  = nil # optional
+  title  = nil # optional
+  streams = hub.list_streams(marker: marker, limit: limit, title: title)
+  puts "Hub list_streams() =>\n#{streams.inspect}\n\n"
+rescue Exception => e
+  puts "Hub list_streams() failed. Caught exception:\n#{e.http_body}\n\n"
+end
+
+#[
+#  #<Pili::Stream:0x007fdf94108f58>,
+#  #<Pili::Stream:0x007fdf94108f30>,
+#  #<Pili::Stream:0x007fdf94108f08>,
+#  #<Pili::Stream:0x007fdf94108ee0>,
+#  #<Pili::Stream:0x007fdf94108eb8>,
+#  #<Pili::Stream:0x007fdf94108e90>,
+#  #<Pili::Stream:0x007fdf94108e68>,
+#  #<Pili::Stream:0x007fdf94108e40>,
+#  #<Pili::Stream:0x007fdf94108e18>,
+#  #<Pili::Stream:0x007fdf94108df0>
+#]
 ```
 
-### Stream
 
-#### Update a stream
+## Stream
 
+### To JSON String
 ```ruby
-# publish_key: optional, a secret key for signing the <publishToken>
-# publish_security: optional, can be "dynamic" or "static", default is "dynamic"
-# disabled: optional, can be true or false
-stream.update(publish_key: "new_key", publish_security: "dynamic", disabled: true)
-# return updated stream object...
+json_string = stream.to_json()
+puts "Stream stream.to_json() =>\n#{json_string}\n\n"
+
+#'{
+#  "id":"z1.hub_name.55d886b5e3ba571322003121",
+#  "title":"55d886b5e3ba571322003121",
+#  "hub":"hub_name",
+#  "publish_key":"0e18061751841053",
+#  "publish_security":"dynamic",
+#  "disabled":false,
+#  "hosts":{
+#    "publish":{
+#      "rtmp":"eksg7h.pub.z0.pili.qiniup.com"
+#    },
+#    "live":{
+#      "http":"eksg7h.live1-http.z1.pili.qiniucdn.com",
+#      "rtmp":"eksg7h.live1-rtmp.z1.pili.qiniucdn.com"
+#    },
+#    "playback":{
+#      "http":"eksg7h.hls.z0.pili.qiniucdn.com"
+#    },
+#    "play":{
+#      "hls":"eksg7h.live1-http.z1.pili.qiniucdn.com",
+#      "rtmp":"eksg7h.live1-rtmp.z1.pili.qiniucdn.com"
+#    }
+#  },
+#  "created_at":"2015-08-22T10:27:01.62-04:00",
+#  "updated_at":"2015-08-22T10:27:01.62-04:00"
+#}'
 ```
 
-#### Delete a stream
 
+### Update a Stream
 ```ruby
-stream.delete()
+begin
+  publish_key = "new_secret_words" # optional, a secret key for signing the <publishToken>
+  publish_security = "static" # optional, can be "dynamic" or "static", default is "dynamic"
+  disabled = nil # optional, can be true or false
+  stream = stream.update(publish_key: publish_key, publish_security: publish_security, disabled: disabled)
+  puts "Stream update() =>\n#{stream.inspect}\n\n"
+rescue Exception => e
+  puts "Stream update() failed. Caught exception:\n#{e.http_body}\n\n"
+end
+
+##<Pili::Stream:0x007fdf6413ab67
+#  @credentials=#<Pili::Credentials:0x007fdf939c2238 @access_key="0QxleRjH-IGYystrYdeY5w6KdkSdJVa5SaBUbJkY", @secret_key="Vg3u2240H6JL78sfjsgLohGLjk_jO5e0cdief0g3">,
+#  @id="z1.hub_name.55d886b5e3ba571322003121",
+#  @title="55d886b5e3ba571322003121",
+#  @hub="hub_name",
+#  @publish_key="new_secret_words",
+#  @publish_security="static",
+#  @disabled=false,
+#  @hosts={
+#    "publish"=>{
+#      "rtmp"=>"eksg7h.pub.z0.pili.qiniup.com"
+#    },
+#    "live"=>{
+#      "http"=>"eksg7h.live1-http.z1.pili.qiniucdn.com",
+#      "rtmp"=>"eksg7h.live1-rtmp.z1.pili.qiniucdn.com"
+#    },
+#    "playback"=>{
+#      "http"=>"eksg7h.hls.z0.pili.qiniucdn.com"
+#    },
+#    "play"=>{
+#      "hls"=>"eksg7h.live1-http.z1.pili.qiniucdn.com",
+#      "rtmp"=>"eksg7h.live1-rtmp.z1.pili.qiniucdn.com"
+#    }
+#  },
+#  @created_at="2015-08-22T14:27:01.62Z",
+#  @updated_at="2015-08-22T14:27:01.62Z"
+#>
 ```
 
-#### Get stream segments
 
+### Disable a Stream
 ```ruby
-# start_time: optional, integer, in second, unix timestamp
-# end_time:   optional, integer, in second, unix timestamp
-stream.segments()
-# or
-stream.segments(start_time, end_time)
+begin
+  stream = stream.disable()
+  puts "Stream disable() =>\n#{stream.inspect}\n\n"
+rescue Exception => e
+  puts "Stream disable() failed. Caught exception:\n#{e.http_body}\n\n"
+end
 
-# [
-#   {
-#     "start": <StartSecond>,
-#     "end": <EndSecond>
-#   },
-#   {
-#     "start": <StartSecond>,
-#     "end": <EndSecond>
-#   },
-#   ...
-# ]
+##<Pili::Stream:0x007fdf6413ab67
+#  @credentials=#<Pili::Credentials:0x007fdf939c2238 @access_key="0QxleRjH-IGYystrYdeY5w6KdkSdJVa5SaBUbJkY", @secret_key="Vg3u2240H6JL78sfjsgLohGLjk_jO5e0cdief0g3">,
+#  @id="z1.hub_name.55d886b5e3ba571322003121",
+#  @title="55d886b5e3ba571322003121",
+#  @hub="hub_name",
+#  @publish_key="new_secret_words",
+#  @publish_security="static",
+#  @disabled=true,
+#  @hosts={
+#    "publish"=>{
+#      "rtmp"=>"eksg7h.pub.z0.pili.qiniup.com"
+#    },
+#    "live"=>{
+#      "http"=>"eksg7h.live1-http.z1.pili.qiniucdn.com",
+#      "rtmp"=>"eksg7h.live1-rtmp.z1.pili.qiniucdn.com"
+#    },
+#    "playback"=>{
+#      "http"=>"eksg7h.hls.z0.pili.qiniucdn.com"
+#    },
+#    "play"=>{
+#      "hls"=>"eksg7h.live1-http.z1.pili.qiniucdn.com",
+#      "rtmp"=>"eksg7h.live1-rtmp.z1.pili.qiniucdn.com"
+#    }
+#  },
+#  @created_at="2015-08-22T14:27:01.62Z",
+#  @updated_at="2015-08-22T14:27:01.62Z"
+#>
 ```
 
-#### Get stream status
 
+### Enable a Stream
 ```ruby
-stream.status()
-# {
-#   "addr": "106.187.43.211:51393",
-#   "status": "disconnected"
-# }
+begin
+  stream = stream.enable()
+  puts "Stream enable() =>\n#{stream.inspect}\n\n"
+rescue Exception => e
+  puts "Stream enable() failed. Caught exception:\n#{e.http_body}\n\n"
+end
+
+##<Pili::Stream:0x007fdf6413ab67
+#  @credentials=#<Pili::Credentials:0x007fdf939c2238 @access_key="0QxleRjH-IGYystrYdeY5w6KdkSdJVa5SaBUbJkY", @secret_key="Vg3u2240H6JL78sfjsgLohGLjk_jO5e0cdief0g3">,
+#  @id="z1.hub_name.55d886b5e3ba571322003121",
+#  @title="55d886b5e3ba571322003121",
+#  @hub="hub_name",
+#  @publish_key="new_secret_words",
+#  @publish_security="static",
+#  @disabled=false,
+#  @hosts={
+#    "publish"=>{
+#      "rtmp"=>"eksg7h.pub.z0.pili.qiniup.com"
+#    },
+#    "live"=>{
+#      "http"=>"eksg7h.live1-http.z1.pili.qiniucdn.com",
+#      "rtmp"=>"eksg7h.live1-rtmp.z1.pili.qiniucdn.com"
+#    },
+#    "playback"=>{
+#      "http"=>"eksg7h.hls.z0.pili.qiniucdn.com"
+#    },
+#    "play"=>{
+#      "hls"=>"eksg7h.live1-http.z1.pili.qiniucdn.com",
+#      "rtmp"=>"eksg7h.live1-rtmp.z1.pili.qiniucdn.com"
+#    }
+#  },
+#  @created_at="2015-08-22T14:27:01.62Z",
+#  @updated_at="2015-08-22T14:27:01.62Z"
+#>
 ```
 
-#### Generate RTMP publish URL
 
+# Get stream status
 ```ruby
-stream.rtmp_publish_url()
-# return a rtmp publish url, eg. "rtmp://test.qiniucdn.com/hubname/test?key=publish_test_key"
+begin
+  status_info = stream.status()
+  puts "Stream status() =>\n#{status_info.inspect}\n\n"
+rescue Exception => e
+  puts "Stream status() failed. Caught exception:\n#{e.http_body}\n\n"
+end
+
+#{
+#  "addr"=>"",
+#  "status"=>"disconnected",
+#  "bytesPerSecond"=>0,
+#  "framesPerSecond"=>{
+#    "audio"=>0,
+#    "video"=>0,
+#    "data"=>0
+#  }
+#}
 ```
 
-#### Generate RTMP live play URLs
 
+### Generate RTMP publish URL
+```ruby
+publish_url = stream.rtmp_publish_url()
+puts "Stream rtmp_publish_url() =>\n#publish_url}\n\n"
+
+# "rtmp://eksg7h.pub.z1.pili.qiniup.com/hub_name/55d886b5e3ba571322003121?nonce=1440256178&token=ikRpJBxr4qkfRJkAz4dtiaWITAQ="
+```
+
+
+### Generate RTMP live play URLs
 ```ruby
 urls = stream.rtmp_live_urls()
-# return rtmp live play urls, eg.
+puts "Stream rtmp_live_urls() =>\n#{urls.inspect}\n\n"
+
 # {
-#   "ORIGIN" => "rtmp://test.qiniucdn.com/hubname/test",
-#   "240p" => "rtmp://test.qiniucdn.com/hubname/test@240p",
-#   ...
+#   "ORIGIN"=>"rtmp://eksg7h.live1-rtmp.z1.pili.qiniucdn.com/hub_name/55d886b5e3ba571322003121"
 # }
-
-# Get original RTMP live url
-original_url = urls['ORIGIN']
 ```
 
-#### Generate HLS live play URLs
 
+### Generate HLS live play URLs
 ```ruby
-stream.hls_live_urls()
-# return hls live play urls, eg.
+urls = stream.hls_live_urls()
+puts "Stream hls_live_urls() =>\n#{urls.inspect}\n\n"
+
 # {
-#   "ORIGIN" => "http://test.qiniucdn.com/hubname/test.m3u8",
-#   "240p" => "http://test.qiniucdn.com/hubname/test@240p.m3u8"
-#   ...
+#   "ORIGIN"=>"http://eksg7h.live1-http.z1.pili.qiniucdn.com/hub_name/55d886b5e3ba571322003121.m3u8"
 # }
-
-# Get original HLS live url
-original_url = urls['ORIGIN']
 ```
 
-#### Generate HLS playback URLs
 
+### Generate HTTP-FLV live play URLs
 ```ruby
-# start_time: optional, integer, in second, unix timestamp
-# end_time:   optional, integer, in second, unix timestamp
-stream.hls_playback_urls(start_time, end_time)
-# return hls playback urls, eg.
+urls = stream.http_flv_live_urls()
+puts "Stream http_flv_live_urls() =>\n#{urls.inspect}\n\n"
+
 # {
-#   "ORIGIN" => "http://test.qiniucdn.com/hubname/test.m3u8?start=1436843430&end=1436846938",
-#   "240p" => "http://test.qiniucdn.com/hubname/test@240p.m3u8?start=1436843430&end=1436846938"
-#   ...
+#   "ORIGIN"=>"http://eksg7h.live1-http.z1.pili.qiniucdn.com/hub_name/55d886b5e3ba571322003121.flv"
 # }
-
-# Get original HLS playback url
-original_url = urls['ORIGIN']
 ```
 
-#### To JSON String
+
+### Get stream segments
 ```ruby
-stream.to_json()
-```
+begin
+  start_time = nil  # optional, integer, in second, unix timestamp
+  end_time   = nil  # optional, integer, in second, unix timestamp
+  limit      = nil  # optional, uint
+  segments = stream.segments(start_time: start_time, end_time: end_time, limit: limit)
+  puts "Stream segments() =>\n#{segments.inspect}\n\n"
+rescue Exception => e
+  puts "Stream segments() failed. Caught exception:\n#{e.http_body}\n\n"
+end
 
-#### Save Stream as
-```ruby
-# name       = "fileName" # required, string
-# format     = "mp4"      # required, string
-# start_time = 1439121809 # required, int64, in second, unix timestamp
-# end_time   = 1439125409 # required, int64, in second, unix timestamp
-# options = {
-#   :notify_url => "http://remote_callback_url"
-# } #optional
-
-stream.save_as(name, format, start_time, end_time, options)
-
-# return a dictionary:
 # {
-#   "url": "<m3u8Url>",
-#   "targetUrl": "<TargetFileUrl>",
-#   "persistentId": <PersistentId>
+#   "segments":[
+#     {
+#       "start":1440256809,
+#       "end":1440256842
+#     },
+#     {
+#       "start":1440256842,
+#       "end":1440256852
+#     }
+#   ]
 # }
-#
-# You can get saving state via Qiniu fop service using persistentId.
-# API: `curl -D GET http://api.qiniu.com/status/get/prefop?id=<PersistentId>`
-# Doc reference: `http://developer.qiniu.com/docs/v6/api/overview/fop/persistent-fop.html#pfop-status`
 ```
 
-#### Enable
+
+### Generate HLS playback URLs
 ```ruby
-stream.enable()
-```
+start_time = 1440196065# required, integer, in second, unix timestamp
+end_time   = 1440196105# required, integer, in second, unix timestamp
+urls = stream.hls_playback_urls(start_time, end_time)
+puts "Stream hls_playback_urls() =>\n#{urls.inspect}\n\n"
 
-#### Disable
-```ruby
-stream.disable()
-```
-
-#### Snapshot
-```ruby
-# name       = "fileName" # required, string
-# format     = "jpg"      # required, string
-# options = {
-#   :time       => 1439125409                   # optional, int64, in second, unix timestamp
-#   :notify_url => "http://remote_callback_url" # optional
-# }
-
-stream.snapshot(name, format, options)
-
-# return a dictionary:
 # {
-#   "targetUrl": "<TargetUrl>",
-#   "persistentId": <persistentId>
+#   "ORIGIN"=>"http://eksg7h.hls.z0.pili.qiniucdn.com/hub_name/55d886b5e3ba571322003121.m3u8?start=1440196065&end=1440196105"
 # }
 ```
+
+
+### Snapshot
+```ruby
+begin
+  name       = "imageName" # required, string
+  format     = "jpg"       # required, string
+  options = {
+    :time       => 1440067100,  # optional, int64, in second, unix timestamp
+    :notify_url => nil          # optional
+  }
+  result = stream.snapshot(name, format, options)
+  puts "Stream snapshot() =>\n#{result.inspect}\n\n"
+rescue Exception => e
+  puts "Stream snapshot() failed. Caught exception:\n#{e.http_body}\n\n"
+end
+
+# {
+#   "targetUrl"=>"http://eksg7h.ts1.z0.pili.qiniucdn.com/snapshots/z1.hub_name.55d886b5e3ba571322003121/imageName",
+#   "persistentId"=>"z0.55d8948f7823de5a49b52561"
+# }
+```
+
+
+### Save Stream as
+```ruby
+begin
+  name       = "videoName" # required, string
+  format     = "mp4"       # required, string
+  start_time = 1440067100  # required, int64, in second, unix timestamp
+  end_time   = 1440068104  # required, int64, in second, unix timestamp
+  notify_url = nil         # optional
+  result = stream.save_as(name, format, start_time, end_time, notify_url)
+  puts "Stream save_as() =>\n#{result.inspect}\n\n"
+rescue Exception => e
+  puts "Stream save_as() failed. Caught exception:\n#{e.http_body}\n\n"
+end
+
+# {
+#   "url"=>"http://eksg7h.ts1.z0.pili.qiniucdn.com/recordings/z1.hub_name.55d886b5e3ba571322003121/videoName.m3u8",
+#   "targetUrl"=>"http://eksg7h.ts1.z0.pili.qiniucdn.com/recordings/z1.hub_name.55d886b5e3ba571322003121/videoName",
+#   "persistentId"=>"z0.55d894f77823de5a49b52a16"
+# }
+```
+
+
+### Delete a stream
+```ruby
+begin
+  result = stream.delete()
+  puts "Stream delete() =>\n#{result.inspect}\n\n"
+rescue Exception => e
+  puts "Stream delete() failed. Caught exception:\n#{e.http_body}\n\n"
+end
+
+# nil
+```
+
+
 
 ## History
-- 1.4.0
+- 1.5.0
   - Add get stream http flv live urls function feature
   - Add stream disable function feature
   - Add stream enable function feature
