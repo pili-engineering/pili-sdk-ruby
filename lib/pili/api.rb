@@ -9,7 +9,7 @@ module Pili
         url = "/streams"
 
         body = {
-          :hub              => @hub_name,
+          :hub              => hub_name,
           :title            => options[:title],
           :publishKey       => options[:publish_key],
           :publishSecurity  => options[:publish_security] == "static" ? "static" : "dynamic",
@@ -35,18 +35,24 @@ module Pili
         url += "&limit=#{options[:limit]}"   if options[:limit].is_a?(Fixnum)
         url += "&title=#{options[:title]}"   unless Utils.blank?(options[:title])
 
-        RPC.get(credentials, url)
+        streams = []
+
+        RPC.get(credentials, url)["items"].each do |item|
+          streams << Stream.new(credentials, item)
+        end
+
+        streams
       end
 
 
       def get_stream_status(credentials, stream_id)
-        url = "/streams/#{@id}/status"
-        RPC.get(credentials, @client.access_key, @client.secret_key, url)
+        url = "/streams/#{stream_id}/status"
+        RPC.get(credentials, url)
       end
 
 
-      def update_stream(credentials, id, options = {})
-        url = "/streams/" + @id
+      def update_stream(credentials, stream_id, options = {})
+        url = "/streams/" + stream_id
 
         body = {}
         body[:publishKey]      = options[:publish_key]
@@ -55,37 +61,30 @@ module Pili
 
         body.delete_if { |k, v| v.nil? }
 
-        stream = RPC.post(credentials, @client.access_key, @client.secret_key, url, body)
-
-        @publish_key      = stream["publishKey"]
-        @publish_security = stream["publishSecurity"]
-        @disabled         = stream["disabled"]
-        @updated_at       = stream["updatedAt"]
-
-        self
+        Stream.new credentials, RPC.post(credentials, url, body)
       end
 
 
       def delete_stream(credentials, stream_id)
-        url = "/streams/" + @id
-        RPC.delete(credentials, @client.access_key, @client.secret_key, url)
+        url = "/streams/" + stream_id
+        RPC.delete(credentials, url)
       end
 
 
       def get_stream_segments(credentials, stream_id, options = {})
-        url = "/streams/#{@id}/segments"
+        url = "/streams/#{stream_id}/segments"
 
         url += "?start=#{options[:start]}" if options[:start].is_a?(Fixnum)
         url += "&end=#{options[:end]}"     if options[:end].is_a?(Fixnum)
         url += "&limit=#{options[:limit]}" if options[:limit].is_a?(Fixnum)
 
-        response = RPC.get(credentials, @client.access_key, @client.secret_key, url)
+        response = RPC.get(credentials, url)
         response["segments"] || []
       end
 
 
       def save_stream_as(credentials, stream_id, name, format, start_time, end_time, notify_url = nil)
-        url = "/streams/" + @id + "/saveas"
+        url = "/streams/" + stream_id + "/saveas"
 
         body = {}
         body[:name]      = name
@@ -96,12 +95,12 @@ module Pili
 
         body.delete_if { |k, v| v.nil? }
 
-        RPC.post(credentials, @client.access_key, @client.secret_key, url, body)
+        RPC.post(credentials, url, body)
       end
 
 
       def snapshot(credentials, stream_id, name, format, options = {})
-        url = "/streams/" + @id + '/snapshot'
+        url = "/streams/" + stream_id + '/snapshot'
 
         body = {}
         body[:name]      = name
@@ -111,7 +110,7 @@ module Pili
 
         body.delete_if { |k, v| v.nil? }
 
-        RPC.post(credentials, @client.access_key, @client.secret_key, url, body)
+        RPC.post(credentials, url, body)
       end
 
 

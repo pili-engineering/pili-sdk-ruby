@@ -7,7 +7,7 @@ module Pili
 
 
     def initialize(credentials, options = {})
-      @credentials      = options["credentials"]
+      @credentials      = credentials
       @id               = options["id"]
       @title            = options["title"]
       @hub              = options["hub"]
@@ -23,7 +23,7 @@ module Pili
 
 
     def status
-      API.get_stream_status(@credentials, stream_id)
+      API.get_stream_status(@credentials, @id)
     end
 
 
@@ -49,7 +49,7 @@ module Pili
         return "rtmp://#{rtmp_publish_host}/#{@hub}/#{@title}?key=#{@publish_key}"
       else
         nonce = Time.now.to_i
-        token = credentials.sign(publish_key, "/#{@hub}/#{@title}?nonce=#{nonce}")
+        token = Credentials.sign(publish_key, "/#{@hub}/#{@title}?nonce=#{nonce}")
         return "rtmp://#{rtmp_publish_host}/#{@hub}/#{@title}?nonce=#{nonce}&token=#{token}"
       end
     end
@@ -139,7 +139,7 @@ module Pili
 
 
     def snapshot(name, format, options = {})
-      API.save_stream_as(@credentials, @id, name, format, options)
+      API.snapshot(@credentials, @id, name, format, options)
     end
 
   end

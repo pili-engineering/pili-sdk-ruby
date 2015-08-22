@@ -6,14 +6,16 @@ module Pili
     class << self
 
       def get(credentials, url)
+        url = Config.api_base_url + url
+
         signature_options = {
-          :url => Config.api_base_url + url,
+          :url => url,
           :method => "GET"
         }
 
         encoded_sign = Credentials.sign(credentials.secret_key, Credentials.generate_signature(signature_options))
 
-        headers = { "Authorization" => "Qiniu #{access_key}:#{encoded_sign}" }
+        headers = { "Authorization" => "Qiniu #{credentials.access_key}:#{encoded_sign}" }
 
         response = HTTParty.get(url, :headers => headers)
 
@@ -26,8 +28,10 @@ module Pili
 
 
       def post(credentials, url, body)
+        url = Config.api_base_url + url
+
         signature_options = {
-          :url => Config.api_base_url + url,
+          :url => url,
           :content_type => "application/json",
           :method => "POST",
           :body => body
@@ -36,7 +40,7 @@ module Pili
         encoded_sign = Credentials.sign(credentials.secret_key, Credentials.generate_signature(signature_options))
 
         headers = {
-          "Authorization" => "Qiniu #{access_key}:#{encoded_sign}",
+          "Authorization" => "Qiniu #{credentials.access_key}:#{encoded_sign}",
           "Content-Type"  => "application/json"
         }
 
@@ -51,14 +55,16 @@ module Pili
 
 
       def delete(credentials, url)
+        url = Config.api_base_url + url
+
         signature_options = {
-          :url => Config.api_base_url + url,
+          :url => url,
           :method => "DELETE"
         }
 
         encoded_sign = Credentials.sign(credentials.secret_key, Credentials.generate_signature(signature_options))
 
-        headers = { "Authorization" => "Qiniu #{access_key}:#{encoded_sign}" }
+        headers = { "Authorization" => "Qiniu #{credentials.access_key}:#{encoded_sign}" }
 
         response = HTTParty.delete(url, :headers => headers)
 

@@ -7,7 +7,7 @@ module Pili
         :api_scheme  => "http",
         :api_host    => "pili.qiniuapi.com",
         :api_version => "v1",
-        :origin  => "ORIGIN"
+        :origin      => "ORIGIN"
       }
 
       def init(options = {})
