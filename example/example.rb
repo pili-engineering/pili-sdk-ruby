@@ -1,7 +1,6 @@
 require 'pili'
 
-# API_HOST = 'pili-lte.qiniuapi.com'
-API_HOST = 'z0.pili.qiniuapi.com'
+API_HOST = 'pili-lte.qiniuapi.com'
 
 ACCESS_KEY = 'Qiniu_AccessKey'
 SECRETE_KEY = 'Qiniu_SecretKey'
@@ -12,7 +11,8 @@ Pili::Config.init api_host: API_HOST
 
 
 # Instantiate an Pili hub
-hub = Pili::Hub.new(ACCESS_KEY, SECRETE_KEY, HUB_NAME)
+credentials = Pili::Credentials.new(ACCESS_KEY, SECRETE_KEY)
+hub = Pili::Hub.new(credentials, HUB_NAME)
 puts "Hub initialize =>\n#{hub.inspect}\n\n"
 
 
