@@ -82,7 +82,7 @@ Pili::Config.init api_host: 'pili-lte.qiniuapi.com' # pili.qiniuapi.com as deafu
 
 ## Hub
 
-### Instantiate an Pili Hub
+### Instantiate a Pili Hub
 ```ruby
 credentials = Pili::Credentials.new(ACCESS_KEY, SECRETE_KEY)
 hub = Pili::Hub.new(credentials, HUB_NAME)
