@@ -28,7 +28,17 @@ module Pili
 
 
     def update(options = {})
-      API.update_stream(@credentials, @id, options)
+      API.update_stream(@credentials, @id, self.to_h.merge!(options))
+    end
+
+
+    def enable
+      API.update_stream(@credentials, @id, disabled: false)
+    end
+
+
+    def disable
+      API.update_stream(@credentials, @id, disabled: true)
     end
 
 
@@ -123,23 +133,30 @@ module Pili
     end
 
 
+    def snapshot(name, format, options = {})
+      API.snapshot(@credentials, @id, name, format, options)
+    end
+
+
     def save_as(name, format, start_time, end_time, notify_url = nil)
       API.save_stream_as(@credentials, @id, name, format, start_time, end_time, notify_url)
     end
 
 
-    def enable
-      API.update_stream(@credentials, @id, disabled: false)
-    end
-
-
-    def disable
-      API.update_stream(@credentials, @id, disabled: true)
-    end
-
-
-    def snapshot(name, format, options = {})
-      API.snapshot(@credentials, @id, name, format, options)
+    def to_h
+      {
+        credentials:      @credentials,
+        id:               @id,
+        title:            @title,
+        hub:              @hub,
+        profiles:         @profiles,
+        publish_key:      @publish_key,
+        publish_security: @publish_security,
+        disabled:         @disabled,
+        hosts:            @hosts,
+        created_at:       @created_at,
+        updated_at:       @updated_at
+      }
     end
 
   end
