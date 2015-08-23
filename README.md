@@ -22,7 +22,7 @@
   - [x] stream.snapshot()
   - [x] stream.delete()
 
-## Content
+## Contents
 
 - [Installation](#installation)
 - [Usage](#usage)
@@ -82,8 +82,8 @@ Pili::Config.init api_host: 'pili-lte.qiniuapi.com' # pili.qiniuapi.com as deafu
 
 ## Hub
 
+### Instantiate an Pili Hub
 ```ruby
-# Instantiate an Pili Hub
 credentials = Pili::Credentials.new(ACCESS_KEY, SECRETE_KEY)
 hub = Pili::Hub.new(credentials, HUB_NAME)
 puts "Hub initialize =>\n#{hub.inspect}\n\n"
@@ -98,10 +98,10 @@ begin
   publish_key      = nil # optional, auto-generated as default
   publish_security = nil # optional, can be "dynamic" or "static", "dynamic" as default
 
-  # stream = hub.create_stream() 
+  # stream = hub.create_stream()
   # or
   stream = hub.create_stream(title: title, publish_key: publish_key, publish_security: publish_security)
-  
+
   puts "Hub create_stream() =>\n#{stream.inspect}\n\n"
 rescue Exception => e
   puts "Hub create_stream() failed. Caught exception:\n#{e.http_body}\n\n"
@@ -415,9 +415,9 @@ begin
   start_time = nil  # optional, integer, in second, unix timestamp
   end_time   = nil  # optional, integer, in second, unix timestamp
   limit      = nil  # optional, uint
-  
+
   segments = stream.segments(start_time: start_time, end_time: end_time, limit: limit)
-  
+
   puts "Stream segments() =>\n#{segments.inspect}\n\n"
 rescue Exception => e
   puts "Stream segments() failed. Caught exception:\n#{e.http_body}\n\n"
@@ -473,9 +473,9 @@ end
 # }
 ```
 
-While invoking `saveAs()` and `snapshot()`, You can get processing state via Qiniu FOP Service using `persistentId`.  
-API: `curl -D GET http://api.qiniu.com/status/get/prefop?id={PersistentId}`  
-Doc reference: <http://developer.qiniu.com/docs/v6/api/overview/fop/persistent-fop.html#pfop-status>  
+While invoking `saveAs()` and `snapshot()`, You can get processing state via Qiniu FOP Service using `persistentId`.
+API: `curl -D GET http://api.qiniu.com/status/get/prefop?id={PersistentId}`
+Doc reference: <http://developer.qiniu.com/docs/v6/api/overview/fop/persistent-fop.html#pfop-status>
 
 
 ### Snapshot Stream
