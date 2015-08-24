@@ -1,13 +1,16 @@
 require 'pili'
 
-API_HOST = 'pili-lte.qiniuapi.com'
-
-ACCESS_KEY = 'Qiniu_AccessKey'
+# Replace with your keys here
+ACCESS_KEY  = 'Qiniu_AccessKey'
 SECRETE_KEY = 'Qiniu_SecretKey'
 
-HUB_NAME = 'Pili_HubName'
+# Replace with your hub name
+HUB_NAME = 'Pili_Hub_Name' # The Hub must be exists before use
 
-Pili::Config.init api_host: API_HOST
+# Change API host as necessary
+# pili.qiniuapi.com as deafult
+# pili-lte.qiniuapi.com is the latest RC version
+Pili::Config.init api_host: 'pili-lte.qiniuapi.com'
 
 
 # Instantiate an Pili hub
@@ -141,11 +144,11 @@ puts "Stream hls_playback_urls() =>\n#{urls.inspect}\n\n"
 
 # Snapshot
 begin
-  name       = "imageName" # required, string
-  format     = "jpg"       # required, string
+  name       = "imageName.jpg" # required, string
+  format     = "jpg"           # required, string
   options = {
-    :time       => 1440067100,  # optional, int64, in second, unix timestamp
-    :notify_url => nil          # optional
+    :time       => 1440067100, # optional, int64, in second, unix timestamp
+    :notify_url => nil         # optional
   }
   result = stream.snapshot(name, format, options)
   puts "Stream snapshot() =>\n#{result.inspect}\n\n"
@@ -156,11 +159,11 @@ end
 
 # Save Stream as
 begin
-  name       = "videoName" # required, string
-  format     = "mp4"       # required, string
-  start_time = 1440067100  # required, int64, in second, unix timestamp
-  end_time   = 1440068104  # required, int64, in second, unix timestamp
-  notify_url = nil         # optional
+  name       = "videoName.mp4" # required, string
+  format     = "mp4"           # required, string
+  start_time = 1440067100      # required, int64, in second, unix timestamp
+  end_time   = 1440068104      # required, int64, in second, unix timestamp
+  notify_url = nil             # optional
   result = stream.save_as(name, format, start_time, end_time, notify_url)
   puts "Stream save_as() =>\n#{result.inspect}\n\n"
 rescue Exception => e
