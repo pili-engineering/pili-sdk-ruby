@@ -1,13 +1,16 @@
 require 'pili'
 
-API_HOST = 'pili-lte.qiniuapi.com'
-
-ACCESS_KEY = 'Qiniu_AccessKey'
+# Replace with your keys here
+ACCESS_KEY  = 'Qiniu_AccessKey'
 SECRETE_KEY = 'Qiniu_SecretKey'
 
-HUB_NAME = 'Pili_HubName'
+# Replace with your hub name
+HUB_NAME = 'Pili_Hub_Name' # The Hub must be exists before use
 
-Pili::Config.init api_host: API_HOST
+# Change API host as necessary
+# pili.qiniuapi.com as deafult
+# pili-lte.qiniuapi.com is the latest RC version
+Pili::Config.init api_host: 'pili-lte.qiniuapi.com'
 
 
 # Instantiate an Pili hub
@@ -20,11 +23,12 @@ puts "Hub initialize =>\n#{hub.inspect}\n\n"
 
 # Create a new Stream
 begin
-  title = nil # optional, default is auto-generated
-  publish_key = nil # optional, a secret key for signing the <publishToken>
+  title = nil            # optional, default is auto-generated
+  publish_key = nil      # optional, a secret key for signing the <publishToken>
   publish_security = nil # optional, can be "dynamic" or "static", default is "dynamic"
 
   # stream = hub.create_stream()
+  # or
   stream = hub.create_stream(title: title, publish_key: publish_key, publish_security: publish_security)
   puts "Hub create_stream() =>\n#{stream.inspect}\n\n"
 rescue Exception => e
@@ -63,8 +67,8 @@ puts "Stream stream.to_json() =>\n#{json_string}\n\n"
 # Update a Stream
 begin
   publish_key = "new_secret_words" # optional, a secret key for signing the <publishToken>
-  publish_security = "static" # optional, can be "dynamic" or "static", default is "dynamic"
-  disabled = nil # optional, can be true or false
+  publish_security = "static"      # optional, can be "dynamic" or "static", default is "dynamic"
+  disabled = nil                   # optional, can be true or false
   stream = stream.update(publish_key: publish_key, publish_security: publish_security, disabled: disabled)
   puts "Stream update() =>\n#{stream.inspect}\n\n"
 rescue Exception => e
@@ -132,8 +136,8 @@ end
 
 
 # Generate HLS playback URLs
-start_time = 1440196065# required, integer, in second, unix timestamp
-end_time   = 1440196105# required, integer, in second, unix timestamp
+start_time = 1440196065    # required, integer, in second, unix timestamp
+end_time   = 1440196105    # required, integer, in second, unix timestamp
 urls = stream.hls_playback_urls(start_time, end_time)
 puts "Stream hls_playback_urls() =>\n#{urls.inspect}\n\n"
 
@@ -141,11 +145,11 @@ puts "Stream hls_playback_urls() =>\n#{urls.inspect}\n\n"
 
 # Snapshot
 begin
-  name       = "imageName" # required, string
-  format     = "jpg"       # required, string
+  name       = "imageName.jpg" # required, string
+  format     = "jpg"           # required, string
   options = {
-    :time       => 1440067100,  # optional, int64, in second, unix timestamp
-    :notify_url => nil          # optional
+    :time       => 1440067100, # optional, int64, in second, unix timestamp
+    :notify_url => nil         # optional
   }
   result = stream.snapshot(name, format, options)
   puts "Stream snapshot() =>\n#{result.inspect}\n\n"
@@ -156,11 +160,11 @@ end
 
 # Save Stream as
 begin
-  name       = "videoName" # required, string
-  format     = "mp4"       # required, string
-  start_time = 1440067100  # required, int64, in second, unix timestamp
-  end_time   = 1440068104  # required, int64, in second, unix timestamp
-  notify_url = nil         # optional
+  name       = "videoName.mp4" # required, string
+  format     = "mp4"           # required, string
+  start_time = 1440067100      # required, int64, in second, unix timestamp
+  end_time   = 1440068104      # required, int64, in second, unix timestamp
+  notify_url = nil             # optional
   result = stream.save_as(name, format, start_time, end_time, notify_url)
   puts "Stream save_as() =>\n#{result.inspect}\n\n"
 rescue Exception => e
