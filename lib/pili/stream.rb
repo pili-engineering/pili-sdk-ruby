@@ -2,16 +2,12 @@
 module Pili
   class Stream
 
-    LIVE_URL_ORIGIN_KEY = "ORIGIN"
-
-    attr_reader :client
-    attr_reader :id, :created_at, :updated_at, :title, :hub, :profiles, :hosts
-
+    attr_reader :credentials, :id, :created_at, :updated_at, :title, :hub, :profiles, :hosts
     attr_accessor :publish_key, :publish_security, :disabled
 
 
-    def initialize(client, options = {})
-      @client           = client
+    def initialize(credentials, options = {})
+      @credentials      = credentials
       @id               = options["id"]
       @title            = options["title"]
       @hub              = options["hub"]
@@ -27,46 +23,32 @@ module Pili
 
 
     def status
-      url = Config.api_base_url + "/streams/#{@id}/status"
-      API.get(@client.access_key, @client.secret_key, url)
+      API.get_stream_status(@credentials, @id)
     end
 
 
     def update(options = {})
-      url = Config.api_base_url + "/streams/" + @id
+      API.update_stream(@credentials, @id, self.to_h.merge!(options))
+    end
 
-      body = {}
-      body[:publishKey]      = options[:publish_key]
-      body[:publishSecurity] = options[:publish_security] == "static" ? "static" : "dynamic"
-      body[:disabled]        = options[:disabled]
 
-      body.delete_if { |k, v| v.nil? }
+    def enable
+      API.update_stream(@credentials, @id, disabled: false)
+    end
 
-      stream = API.post(@client.access_key, @client.secret_key, url, body)
 
-      @publish_key      = stream["publishKey"]
-      @publish_security = stream["publishSecurity"]
-      @disabled         = stream["disabled"]
-      @updated_at       = stream["updatedAt"]
-
-      self
+    def disable
+      API.update_stream(@credentials, @id, disabled: true)
     end
 
 
     def delete
-      url = Config.api_base_url + "/streams/" + @id
-      API.delete(@client.access_key, @client.secret_key, url)
+      API.delete_stream(@credentials, @id)
     end
 
 
     def segments(options = {})
-      url = Config.api_base_url + "/streams/#{@id}/segments"
-
-      url += "?start=#{options[:start]}" if options[:start].is_a?(Fixnum)
-      url += "&end=#{options[:end]}"     if options[:end].is_a?(Fixnum)
-
-      response = API.get(@client.access_key, @client.secret_key, url)
-      response["segments"] || []
+      API.get_stream_segments(@credentials, @id, options)
     end
 
 
@@ -77,19 +59,32 @@ module Pili
         return "rtmp://#{rtmp_publish_host}/#{@hub}/#{@title}?key=#{@publish_key}"
       else
         nonce = Time.now.to_i
-        token = Auth.sign(publish_key, "/#{@hub}/#{@title}?nonce=#{nonce}")
+        token = Credentials.sign(publish_key, "/#{@hub}/#{@title}?nonce=#{nonce}")
         return "rtmp://#{rtmp_publish_host}/#{@hub}/#{@title}?nonce=#{nonce}&token=#{token}"
       end
     end
 
 
     def rtmp_live_urls
-      rtmp_play_host = @hosts["play"]["rtmp"]
+      live_rtmp_host = @hosts["live"]["rtmp"]
 
-      urls = { LIVE_URL_ORIGIN_KEY => "rtmp://#{rtmp_play_host}/#{@hub}/#{@title}" }
+      urls = { Config.origin => "rtmp://#{live_rtmp_host}/#{@hub}/#{@title}" }
 
       @profiles.each do |profile|
-        urls[profile] = "rtmp://#{rtmp_play_host}/#{@hub}/#{@title}@#{profile}"
+        urls[profile] = "rtmp://#{live_rtmp_host}/#{@hub}/#{@title}@#{profile}"
+      end
+
+      urls
+    end
+
+
+    def http_flv_live_urls
+      live_http_host = @hosts["live"]["http"]
+
+      urls = { Config.origin => "http://#{live_http_host}/#{@hub}/#{@title}.flv" }
+
+      @profiles.each do |profile|
+        urls[profile] = "http://#{live_http_host}/#{@hub}/#{@title}@#{profile}.flv"
       end
 
       urls
@@ -97,12 +92,12 @@ module Pili
 
 
     def hls_live_urls
-      hls_play_host = @hosts["play"]["hls"]
+      live_http_host = @hosts["live"]["http"]
 
-      urls = { LIVE_URL_ORIGIN_KEY => "http://#{hls_play_host}/#{@hub}/#{@title}.m3u8" }
+      urls = { Config.origin => "http://#{live_http_host}/#{@hub}/#{@title}.m3u8" }
 
       @profiles.each do |profile|
-        urls[profile] = "http://#{hls_play_host}/#{@hub}/#{@title}@#{profile}.m3u8"
+        urls[profile] = "http://#{live_http_host}/#{@hub}/#{@title}@#{profile}.m3u8"
       end
 
       urls
@@ -110,12 +105,12 @@ module Pili
 
 
     def hls_playback_urls(start_second, end_second)
-      hls_play_host = @hosts["play"]["hls"]
+      playback_http_host = @hosts["playback"]["http"]
 
-      urls = { LIVE_URL_ORIGIN_KEY => "http://#{hls_play_host}/#{@hub}/#{@title}.m3u8?start=#{start_second}&end=#{end_second}" }
+      urls = { Config.origin => "http://#{playback_http_host}/#{@hub}/#{@title}.m3u8?start=#{start_second}&end=#{end_second}" }
 
       @profiles.each do |profile|
-        urls[profile] = "http://#{hls_play_host}/#{@hub}/#{@title}@#{profile}.m3u8?start=#{start_second}&end=#{end_second}"
+        urls[profile] = "http://#{playback_http_host}/#{@hub}/#{@title}@#{profile}.m3u8?start=#{start_second}&end=#{end_second}"
       end
 
       urls
@@ -138,19 +133,30 @@ module Pili
     end
 
 
-    def save_as(name, format, start_time, end_time, options = {})
-      url = Config.api_base_url + "/streams/" + @id + "/saveas"
+    def snapshot(name, format, options = {})
+      API.snapshot(@credentials, @id, name, format, options)
+    end
 
-      body = {}
-      body[:name]      = name
-      body[:start]     = start_time
-      body[:end]       = end_time
-      body[:format]    = format
-      body[:notifyUrl] = options[:notify_url]
 
-      body.delete_if { |k, v| v.nil? }
+    def save_as(name, format, start_time, end_time, notify_url = nil)
+      API.save_stream_as(@credentials, @id, name, format, start_time, end_time, notify_url)
+    end
 
-      API.post(@client.access_key, @client.secret_key, url, body)
+
+    def to_h
+      {
+        credentials:      @credentials,
+        id:               @id,
+        title:            @title,
+        hub:              @hub,
+        profiles:         @profiles,
+        publish_key:      @publish_key,
+        publish_security: @publish_security,
+        disabled:         @disabled,
+        hosts:            @hosts,
+        created_at:       @created_at,
+        updated_at:       @updated_at
+      }
     end
 
   end
