@@ -78,7 +78,7 @@ HUB_NAME    = 'Pili_Hub_Name' # The Hub must be exists before use
 # Change API host as necessary
 # pili.qiniuapi.com as deafult
 # pili-lte is the latest RC version
-Pili::Config.init api_host: 'pili-lte.qiniuapi.com' # pili.qiniuapi.com as deafult, pili-lte is the latest RC version.
+Pili::Config.init api_host: 'pili-lte.qiniuapi.com'
 ```
 
 
