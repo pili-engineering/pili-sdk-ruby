@@ -28,7 +28,7 @@
 - [Usage](#usage)
   - [Configuration](#configuration)
   - [Hub](#hub)
-    - [Instantiate a Pili Hub](#instantiate-a-pili-hub)
+    - [Instantiate a Pili Hub object](#instantiate-a-pili-hub-object)
     - [Create a new Stream](#create-a-new-stream)
     - [Get a Stream](#get-a-stream)
     - [List Streams](#list-streams)
@@ -73,16 +73,18 @@ require 'pili'
 ACCESS_KEY  = 'Qiniu_AccessKey'
 SECRETE_KEY = 'Qiniu_SecretKey'
 
-HUB_NAME    = 'Pili_Hub_Name'
+HUB_NAME    = 'Pili_Hub_Name' # The Hub must be exists before use
 
 # Change API host as necessary
+# pili.qiniuapi.com as deafult
+# pili-lte is the latest RC version
 Pili::Config.init api_host: 'pili-lte.qiniuapi.com' # pili.qiniuapi.com as deafult, pili-lte is the latest RC version.
 ```
 
 
 ## Hub
 
-### Instantiate a Pili Hub
+### Instantiate a Pili Hub object
 ```ruby
 credentials = Pili::Credentials.new(ACCESS_KEY, SECRETE_KEY)
 hub = Pili::Hub.new(credentials, HUB_NAME)
@@ -153,14 +155,14 @@ end
 #  @disabled=false,
 #  @hosts={
 #    "publish"=>{
-#      "rtmp"=>"eksg7h.publish.z0.pili.qiniup.com"
+#      "rtmp"=>"eksg7h.publish.z1.pili.qiniup.com"
 #    },
 #    "live"=>{
 #      "http"=>"eksg7h.live1-http.z1.pili.qiniucdn.com",
 #      "rtmp"=>"eksg7h.live1-rtmp.z1.pili.qiniucdn.com"
 #    },
 #    "playback"=>{
-#      "http"=>"eksg7h.playback1.z0.pili.qiniucdn.com"
+#      "http"=>"eksg7h.playback1.z1.pili.qiniucdn.com"
 #    }
 #  },
 #  @created_at="2015-08-22T14:27:01.62Z",
@@ -221,7 +223,7 @@ puts "Stream stream.to_json() =>\n#{json_string}\n\n"
 #      "rtmp":"eksg7h.live1-rtmp.z1.pili.qiniucdn.com"
 #    },
 #    "playback":{
-#      "http":"eksg7h.playback1.z0.pili.qiniucdn.com"
+#      "http":"eksg7h.playback1.z1.pili.qiniucdn.com"
 #    }
 #  },
 #  "created_at":"2015-08-22T10:27:01.62-04:00",
@@ -287,14 +289,14 @@ end
 #  @disabled=true,
 #  @hosts={
 #    "publish"=>{
-#      "rtmp"=>"eksg7h.publish.z0.pili.qiniup.com"
+#      "rtmp"=>"eksg7h.publish.z1.pili.qiniup.com"
 #    },
 #    "live"=>{
 #      "http"=>"eksg7h.live1-http.z1.pili.qiniucdn.com",
 #      "rtmp"=>"eksg7h.live1-rtmp.z1.pili.qiniucdn.com"
 #    },
 #    "playback"=>{
-#      "http"=>"eksg7h.playback1.z0.pili.qiniucdn.com"
+#      "http"=>"eksg7h.playback1.z1.pili.qiniucdn.com"
 #    }
 #  },
 #  @created_at="2015-08-22T14:27:01.62Z",
@@ -323,14 +325,14 @@ end
 #  @disabled=false,
 #  @hosts={
 #    "publish"=>{
-#      "rtmp"=>"eksg7h.publish.z0.pili.qiniup.com"
+#      "rtmp"=>"eksg7h.publish.z1.pili.qiniup.com"
 #    },
 #    "live"=>{
 #      "http"=>"eksg7h.live1-http.z1.pili.qiniucdn.com",
 #      "rtmp"=>"eksg7h.live1-rtmp.z1.pili.qiniucdn.com"
 #    },
 #    "playback"=>{
-#      "http"=>"eksg7h.playback1.z0.pili.qiniucdn.com"
+#      "http"=>"eksg7h.playback1.z1.pili.qiniucdn.com"
 #    }
 #  },
 #  @created_at="2015-08-22T14:27:01.62Z",
