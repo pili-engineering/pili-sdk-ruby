@@ -475,9 +475,9 @@ end
 # }
 ```
 
-While invoking `saveAs()` and `snapshot()`, You can get processing state via Qiniu FOP Service using `persistentId`.
-API: `curl -D GET http://api.qiniu.com/status/get/prefop?id={PersistentId}`
-Doc reference: <http://developer.qiniu.com/docs/v6/api/overview/fop/persistent-fop.html#pfop-status>
+While invoking `saveAs()` and `snapshot()`, you can get processing state via Qiniu FOP Service using `persistentId`.  
+API: `curl -D GET http://api.qiniu.com/status/get/prefop?id={PersistentId}`  
+Doc reference: <http://developer.qiniu.com/docs/v6/api/overview/fop/persistent-fop.html#pfop-status>  
 
 
 ### Snapshot Stream
