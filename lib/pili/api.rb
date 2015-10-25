@@ -38,7 +38,8 @@ module Pili
 
         streams = []
 
-        RPC.get(credentials, url)["items"].each do |item|
+        items = RPC.get(credentials, url)["items"]
+        items && items.each do |item|
           streams << Stream.new(credentials, item)
         end
 
