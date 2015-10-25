@@ -104,7 +104,7 @@ module Pili
     end
 
 
-    def hls_playback_urls(start_second, end_second)
+    def hls_playback_urls(start_second = -1, end_second = -1)
       playback_hls_host = @hosts["playback"]["hls"]
 
       urls = { Config.origin => "http://#{playback_hls_host}/#{@hub}/#{@title}.m3u8?start=#{start_second}&end=#{end_second}" }
