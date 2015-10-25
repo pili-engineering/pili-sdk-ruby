@@ -31,6 +31,7 @@ module Pili
       def list_streams(credentials, hub_name, options = {})
         url = "/streams?hub=#{hub_name}"
 
+        url += "&status=#{options[:status]}" if options[:status] == "connected"
         url += "&marker=#{options[:marker]}" unless Utils.blank?(options[:marker])
         url += "&limit=#{options[:limit]}"   if options[:limit].is_a?(Fixnum)
         url += "&title=#{options[:title]}"   unless Utils.blank?(options[:title])
