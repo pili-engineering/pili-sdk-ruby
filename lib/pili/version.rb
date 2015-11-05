@@ -1,3 +1,3 @@
 module Pili
-  VERSION = "1.5.0"
+  VERSION = "1.5.2"
 end

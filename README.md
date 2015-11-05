@@ -122,11 +122,12 @@ end
 #      "rtmp"=>"eksg7h.publish.z1.pili.qiniup.com"
 #    },
 #    "live"=>{
-#      "http"=>"eksg7h.live1-http.z1.pili.qiniucdn.com",
+#      "hdl"=>"eksg7h.live1-hdl.z1.pili.qiniucdn.com",
+#      "hls"=>"eksg7h.live1-hls.z1.pili.qiniucdn.com",
 #      "rtmp"=>"eksg7h.live1-rtmp.z1.pili.qiniucdn.com"
 #    },
 #    "playback"=>{
-#      "http"=>"eksg7h.playback1.z1.pili.qiniucdn.com"
+#      "hls"=>"eksg7h.playback1.z1.pili.qiniucdn.com"
 #    }
 #  },
 #  @created_at="2015-08-22T14:27:01.62Z",
@@ -158,11 +159,12 @@ end
 #      "rtmp"=>"eksg7h.publish.z1.pili.qiniup.com"
 #    },
 #    "live"=>{
-#      "http"=>"eksg7h.live1-http.z1.pili.qiniucdn.com",
+#      "hdl"=>"eksg7h.live1-hdl.z1.pili.qiniucdn.com",
+#      "hls"=>"eksg7h.live1-hls.z1.pili.qiniucdn.com",
 #      "rtmp"=>"eksg7h.live1-rtmp.z1.pili.qiniucdn.com"
 #    },
 #    "playback"=>{
-#      "http"=>"eksg7h.playback1.z1.pili.qiniucdn.com"
+#      "hls"=>"eksg7h.playback1.z1.pili.qiniucdn.com"
 #    }
 #  },
 #  @created_at="2015-08-22T14:27:01.62Z",
@@ -175,10 +177,11 @@ end
 
 ```ruby
 begin
+  status = nil # optional, can be "connected"
   marker = nil # optional
   limit  = nil # optional
   title  = nil # optional
-  streams = hub.list_streams(marker: marker, limit: limit, title: title)
+  streams = hub.list_streams(status: status, marker: marker, limit: limit, title: title)
   puts "Hub list_streams() =>\n#{streams.inspect}\n\n"
 rescue Exception => e
   puts "Hub list_streams() failed. Caught exception:\n#{e.http_body}\n\n"
@@ -257,11 +260,12 @@ end
 #      "rtmp"=>"eksg7h.publish.z1.pili.qiniup.com"
 #    },
 #    "live"=>{
-#      "http"=>"eksg7h.live1-http.z1.pili.qiniucdn.com",
+#      "hdl"=>"eksg7h.live1-hdl.z1.pili.qiniucdn.com",
+#      "hls"=>"eksg7h.live1-hls.z1.pili.qiniucdn.com",
 #      "rtmp"=>"eksg7h.live1-rtmp.z1.pili.qiniucdn.com"
 #    },
 #    "playback"=>{
-#      "http"=>"eksg7h.playback1.z1.pili.qiniucdn.com"
+#      "hls"=>"eksg7h.playback1.z1.pili.qiniucdn.com"
 #    }
 #  },
 #  @created_at="2015-08-22T14:27:01.62Z",
@@ -292,11 +296,12 @@ end
 #      "rtmp"=>"eksg7h.publish.z1.pili.qiniup.com"
 #    },
 #    "live"=>{
-#      "http"=>"eksg7h.live1-http.z1.pili.qiniucdn.com",
+#      "hdl"=>"eksg7h.live1-hdl.z1.pili.qiniucdn.com",
+#      "hls"=>"eksg7h.live1-hls.z1.pili.qiniucdn.com",
 #      "rtmp"=>"eksg7h.live1-rtmp.z1.pili.qiniucdn.com"
 #    },
 #    "playback"=>{
-#      "http"=>"eksg7h.playback1.z1.pili.qiniucdn.com"
+#      "hls"=>"eksg7h.playback1.z1.pili.qiniucdn.com"
 #    }
 #  },
 #  @created_at="2015-08-22T14:27:01.62Z",
@@ -328,11 +333,12 @@ end
 #      "rtmp"=>"eksg7h.publish.z1.pili.qiniup.com"
 #    },
 #    "live"=>{
-#      "http"=>"eksg7h.live1-http.z1.pili.qiniucdn.com",
+#      "hdl"=>"eksg7h.live1-hdl.z1.pili.qiniucdn.com",
+#      "hls"=>"eksg7h.live1-hls.z1.pili.qiniucdn.com",
 #      "rtmp"=>"eksg7h.live1-rtmp.z1.pili.qiniucdn.com"
 #    },
 #    "playback"=>{
-#      "http"=>"eksg7h.playback1.z1.pili.qiniucdn.com"
+#      "hls"=>"eksg7h.playback1.z1.pili.qiniucdn.com"
 #    }
 #  },
 #  @created_at="2015-08-22T14:27:01.62Z",
@@ -352,6 +358,7 @@ rescue Exception => e
 end
 
 #{
+#  "startFrom"=>"2015-09-10T05:58:10.289+08:00",
 #  "addr"=>"222.73.202.226:2572",
 #  "status"=>"connected",
 #  "bytesPerSecond"=>16870.200000000001,
@@ -393,7 +400,7 @@ urls = stream.hls_live_urls()
 puts "Stream hls_live_urls() =>\n#{urls.inspect}\n\n"
 
 # {
-#   "ORIGIN"=>"http://eksg7h.live1-http.z1.pili.qiniucdn.com/hub1/55d886b5e3ba571322003121.m3u8"
+#   "ORIGIN"=>"http://eksg7h.live1-hls.z1.pili.qiniucdn.com/hub1/55d886b5e3ba571322003121.m3u8"
 # }
 ```
 
@@ -405,7 +412,7 @@ urls = stream.http_flv_live_urls()
 puts "Stream http_flv_live_urls() =>\n#{urls.inspect}\n\n"
 
 # {
-#   "ORIGIN"=>"http://eksg7h.live1-http.z1.pili.qiniucdn.com/hub1/55d886b5e3ba571322003121.flv"
+#   "ORIGIN"=>"http://eksg7h.live1-hdl.z1.pili.qiniucdn.com/hub1/55d886b5e3ba571322003121.flv"
 # }
 ```
 
@@ -443,8 +450,8 @@ end
 ### Generate HLS playback URLs
 
 ```ruby
-start_time = 1440196065 # required, integer, in second, unix timestamp
-end_time   = 1440196105 # required, integer, in second, unix timestamp
+start_time = 1440196065 # optional, integer, in second, unix timestamp
+end_time   = 1440196105 # optional, integer, in second, unix timestamp
 urls = stream.hls_playback_urls(start_time, end_time)
 puts "Stream hls_playback_urls() =>\n#{urls.inspect}\n\n"
 # {

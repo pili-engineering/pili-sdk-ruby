@@ -31,13 +31,15 @@ module Pili
       def list_streams(credentials, hub_name, options = {})
         url = "/streams?hub=#{hub_name}"
 
+        url += "&status=#{options[:status]}" if options[:status] == "connected"
         url += "&marker=#{options[:marker]}" unless Utils.blank?(options[:marker])
         url += "&limit=#{options[:limit]}"   if options[:limit].is_a?(Fixnum)
         url += "&title=#{options[:title]}"   unless Utils.blank?(options[:title])
 
         streams = []
 
-        RPC.get(credentials, url)["items"].each do |item|
+        items = RPC.get(credentials, url)["items"]
+        items && items.each do |item|
           streams << Stream.new(credentials, item)
         end
 

@@ -79,12 +79,12 @@ module Pili
 
 
     def http_flv_live_urls
-      live_http_host = @hosts["live"]["http"]
+      live_hdl_host = @hosts["live"]["hdl"]
 
-      urls = { Config.origin => "http://#{live_http_host}/#{@hub}/#{@title}.flv" }
+      urls = { Config.origin => "http://#{live_hdl_host}/#{@hub}/#{@title}.flv" }
 
       @profiles.each do |profile|
-        urls[profile] = "http://#{live_http_host}/#{@hub}/#{@title}@#{profile}.flv"
+        urls[profile] = "http://#{live_hdl_host}/#{@hub}/#{@title}@#{profile}.flv"
       end
 
       urls
@@ -92,25 +92,25 @@ module Pili
 
 
     def hls_live_urls
-      live_http_host = @hosts["live"]["http"]
+      live_hls_host = @hosts["live"]["hls"]
 
-      urls = { Config.origin => "http://#{live_http_host}/#{@hub}/#{@title}.m3u8" }
+      urls = { Config.origin => "http://#{live_hls_host}/#{@hub}/#{@title}.m3u8" }
 
       @profiles.each do |profile|
-        urls[profile] = "http://#{live_http_host}/#{@hub}/#{@title}@#{profile}.m3u8"
+        urls[profile] = "http://#{live_hls_host}/#{@hub}/#{@title}@#{profile}.m3u8"
       end
 
       urls
     end
 
 
-    def hls_playback_urls(start_second, end_second)
-      playback_http_host = @hosts["playback"]["http"]
+    def hls_playback_urls(start_second = -1, end_second = -1)
+      playback_hls_host = @hosts["playback"]["hls"]
 
-      urls = { Config.origin => "http://#{playback_http_host}/#{@hub}/#{@title}.m3u8?start=#{start_second}&end=#{end_second}" }
+      urls = { Config.origin => "http://#{playback_hls_host}/#{@hub}/#{@title}.m3u8?start=#{start_second}&end=#{end_second}" }
 
       @profiles.each do |profile|
-        urls[profile] = "http://#{playback_http_host}/#{@hub}/#{@title}@#{profile}.m3u8?start=#{start_second}&end=#{end_second}"
+        urls[profile] = "http://#{playback_hls_host}/#{@hub}/#{@title}@#{profile}.m3u8?start=#{start_second}&end=#{end_second}"
       end
 
       urls

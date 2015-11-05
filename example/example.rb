@@ -47,10 +47,11 @@ end
 
 # List streams
 begin
+  status = nil # optional, can be "connected"
   marker = nil # optional
   limit  = nil # optional
   title  = nil # optional
-  streams = hub.list_streams(marker: marker, limit: limit, title: title)
+  streams = hub.list_streams(status: status, marker: marker, limit: limit, title: title)
   puts "Hub list_streams() =>\n#{streams.inspect}\n\n"
 rescue Exception => e
   puts "Hub list_streams() failed. Caught exception:\n#{e.http_body}\n\n"
@@ -136,8 +137,8 @@ end
 
 
 # Generate HLS playback URLs
-start_time = 1440196065    # required, integer, in second, unix timestamp
-end_time   = 1440196105    # required, integer, in second, unix timestamp
+start_time = 1440196065    # optional, integer, in second, unix timestamp
+end_time   = 1440196105    # optional, integer, in second, unix timestamp
 urls = stream.hls_playback_urls(start_time, end_time)
 puts "Stream hls_playback_urls() =>\n#{urls.inspect}\n\n"
 
