@@ -107,7 +107,7 @@ module Pili
     def hls_playback_urls(start_second = -1, end_second = -1)
       name = Time.now.to_i.to_s
       resp = API.save_stream_as(@credentials, @id, name, start_second, end_second)
-      urls = { Config.origin => resp.url }
+      urls = { Config.origin => resp["url"] }
 
       urls
     end
