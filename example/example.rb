@@ -162,11 +162,11 @@ end
 # Save Stream as
 begin
   name       = "videoName.mp4" # required, string
-  format     = "mp4"           # required, string
   start_time = 1440067100      # required, int64, in second, unix timestamp
   end_time   = 1440068104      # required, int64, in second, unix timestamp
+  format     = "mp4"           # optional, string
   notify_url = nil             # optional
-  result = stream.save_as(name, format, start_time, end_time, notify_url)
+  result = stream.save_as(name, start_time, end_time, format, notify_url)
   puts "Stream save_as() =>\n#{result.inspect}\n\n"
 rescue Exception => e
   puts "Stream save_as() failed. Caught exception:\n#{e.http_body}\n\n"
