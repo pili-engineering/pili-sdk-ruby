@@ -526,6 +526,8 @@ end
 
 ## History
 
+- 1.5.3
+  - Use saveas in hls_playback_urls
 - 1.5.0
   - Add stream.http_flv_live_urls()
   - Add stream.disable()
