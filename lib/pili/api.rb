@@ -85,7 +85,7 @@ module Pili
       end
 
 
-      def save_stream_as(credentials, stream_id, name, start_time, end_time, format = nil, notify_url = nil)
+      def save_stream_as(credentials, stream_id, name, format, start_time, end_time, notify_url = nil)
         url = "/streams/" + stream_id + "/saveas"
 
         body = {}
