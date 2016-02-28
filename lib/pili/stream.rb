@@ -105,13 +105,9 @@ module Pili
 
 
     def hls_playback_urls(start_second = -1, end_second = -1)
-      playback_hls_host = @hosts["playback"]["hls"]
-
-      urls = { Config.origin => "http://#{playback_hls_host}/#{@hub}/#{@title}.m3u8?start=#{start_second}&end=#{end_second}" }
-
-      @profiles.each do |profile|
-        urls[profile] = "http://#{playback_hls_host}/#{@hub}/#{@title}@#{profile}.m3u8?start=#{start_second}&end=#{end_second}"
-      end
+      name = Time.now.to_i.to_s
+      resp = API.save_stream_as(@credentials, @id, name, nil, start_second, end_second)
+      urls = { Config.origin => resp["url"] }
 
       urls
     end

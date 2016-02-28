@@ -58,7 +58,7 @@ module Pili
 
         body = {}
         body[:publishKey]      = options[:publish_key]
-        body[:publishSecurity] = options[:publish_security] == "static" ? "static" : "dynamic"
+        body[:publishSecurity] = options[:publish_security]
         body[:disabled]        = options[:disabled]
 
         body.delete_if { |k, v| v.nil? }
