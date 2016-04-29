@@ -465,11 +465,12 @@ puts "Stream hls_playback_urls() =>\n#{urls.inspect}\n\n"
 ```ruby
 begin
   name       = "videoName.mp4" # required, string
-  format     = "mp4"           # required, string
   start_time = 1440067100      # required, int64, in second, unix timestamp
   end_time   = 1440068104      # required, int64, in second, unix timestamp
+  format     = "mp4"           # optional, string
   notify_url = nil             # optional
-  result = stream.save_as(name, format, start_time, end_time, notify_url)
+  pipeline   = nil             # optional
+  result = stream.save_as(name, format, start_time, end_time, notify_url, pipeline)
   puts "Stream save_as() =>\n#{result.inspect}\n\n"
 rescue Exception => e
   puts "Stream save_as() failed. Caught exception:\n#{e.http_body}\n\n"
@@ -526,6 +527,8 @@ end
 
 ## History
 
+- 1.5.4
+  - Add pipeline in saveAs
 - 1.5.3
   - Use saveas in hls_playback_urls
 - 1.5.0

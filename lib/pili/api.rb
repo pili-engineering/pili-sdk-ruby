@@ -85,7 +85,7 @@ module Pili
       end
 
 
-      def save_stream_as(credentials, stream_id, name, format, start_time, end_time, notify_url = nil)
+      def save_stream_as(credentials, stream_id, name, format, start_time, end_time, notify_url = nil, pipeline = nil)
         url = "/streams/" + stream_id + "/saveas"
 
         body = {}
@@ -94,6 +94,7 @@ module Pili
         body[:start]     = start_time
         body[:end]       = end_time
         body[:notifyUrl] = notify_url
+        body[:pipeline]  = pipeline
 
         body.delete_if { |k, v| v.nil? }
 
