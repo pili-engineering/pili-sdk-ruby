@@ -1,182 +1,111 @@
 require 'pili'
 
-# Replace with your keys here
-ACCESS_KEY  = 'Qiniu_AccessKey'
-SECRETE_KEY = 'Qiniu_SecretKey'
+access_key = ENV["PILI_ACCESS_KEY"]
+secret_key = ENV["PILI_SECRET_KEY"]
 
-# Replace with your hub name
-HUB_NAME = 'Pili_Hub_Name' # The Hub must be exists before use
+hub_name = ENV["PILI_HUB_NAME"]
 
-# Change API host as necessary
-# pili.qiniuapi.com as default
-# pili-lte.qiniuapi.com is the latest RC version
-# Pili::Config.init api_host: 'pili.qiniuapi.com' # default
-
-
-# Instantiate an Pili hub
-credentials = Pili::Credentials.new(ACCESS_KEY, SECRETE_KEY)
-hub = Pili::Hub.new(credentials, HUB_NAME)
-puts "Hub initialize =>\n#{hub.inspect}\n\n"
-
-
-# hub
-
-# Create a new Stream
-begin
-  title = nil            # optional, default is auto-generated
-  publish_key = nil      # optional, a secret key for signing the <publishToken>
-  publish_security = nil # optional, can be "dynamic" or "static", default is "dynamic"
-
-  # stream = hub.create_stream()
-  # or
-  stream = hub.create_stream(title: title, publish_key: publish_key, publish_security: publish_security)
-  puts "Hub create_stream() =>\n#{stream.inspect}\n\n"
-rescue Exception => e
-  puts "Hub create_stream() failed. Caught exception:\n#{e.http_body}\n\n"
+if access_key == nil || secret_key == nil
+  raise 'access_key = #{access_key} secret_key = #{secret_key}'
 end
 
+srand
+stream_key_prefix = "ruby-sdkexample-#{rand 1000000000}"
 
-# Get a Stream
+puts "初始化 client."
+mac = Pili::Mac.new access_key, secret_key
+client = Pili::Client.new mac
+hub = client.hub hub_name
+
+puts "获得不存在的流."
+key_a = stream_key_prefix + "-a"
 begin
-  stream = hub.get_stream(stream.id)
-  puts "Hub get_stream() =>\n#{stream.inspect}\n\n"
-rescue Exception => e
-  puts "Hub get_stream() failed. Caught exception:\n#{e.http_body}\n\n"
+  stream_a = hub.stream key_a
+  stream_a.info
+rescue Pili::ResourceNotExist => e
+  puts e
 end
 
+puts "创建流."
+stream_a = hub.create(key_a)
+puts stream_a.info
 
-# List streams
+puts "获得流."
+stream_a = hub.stream(key_a)
+puts "to_json: #{stream_a.info.to_json}"
+
+puts "创建重复的流."
 begin
-  status = nil # optional, can be "connected"
-  marker = nil # optional
-  limit  = nil # optional
-  title  = nil # optional
-  streams = hub.list_streams(status: status, marker: marker, limit: limit, title: title)
-  puts "Hub list_streams() =>\n#{streams.inspect}\n\n"
-rescue Exception => e
-  puts "Hub list_streams() failed. Caught exception:\n#{e.http_body}\n\n"
+  hub.create(key_a)
+rescue Pili::ResourceConflict => e
+  puts e
 end
 
+puts "创建另一路流."
+key_b = stream_key_prefix + "-b"
+stream_b = hub.create(key_b)
+puts stream_b.info
 
-# Stream
-
-# To JSON String
-json_string = stream.to_json()
-puts "Stream stream.to_json() =>\n#{json_string}\n\n"
-
-
-# Update a Stream
+puts "列出所有流."
 begin
-  publish_key = "new_secret_words" # optional, a secret key for signing the <publishToken>
-  publish_security = "static"      # optional, can be "dynamic" or "static", default is "dynamic"
-  disabled = nil                   # optional, can be true or false
-  stream = stream.update(publish_key: publish_key, publish_security: publish_security, disabled: disabled)
-  puts "Stream update() =>\n#{stream.inspect}\n\n"
-rescue Exception => e
-  puts "Stream update() failed. Caught exception:\n#{e.http_body}\n\n"
+  keys, marker = hub.list(:prefix=>stream_key_prefix)
+  puts keys.to_s, marker
+rescue Pili::ResourceNotExist => e
+  puts e
 end
 
-
-# Disable a Stream
+puts "列出正在直播的流."
 begin
-  stream = stream.disable()
-  puts "Stream disable() =>\n#{stream.inspect}\n\n"
-rescue Exception => e
-  puts "Stream disable() failed. Caught exception:\n#{e.http_body}\n\n"
+  keys, marker = hub.list_live(:prefix=>stream_key_prefix)
+  puts keys.to_s, marker
+rescue Pili::ResourceNotExist => e
+  puts e
 end
 
+puts "禁用流."
+stream_a.disable()
+puts stream_a.info
 
-# Enable a Stream
+puts "启用流."
+stream_a.enable()
+puts stream_a.info
+
+puts "查询直播状态."
 begin
-  stream = stream.enable()
-  puts "Stream enable() =>\n#{stream.inspect}\n\n"
-rescue Exception => e
-  puts "Stream enable() failed. Caught exception:\n#{e.http_body}\n\n"
+  status = stream_a.live_status()
+  puts keys, marker
+rescue Pili::ResourceNotExist => e
+  puts e
 end
 
+puts "查询推流历史."
+records = stream_a.history_record()
+puts records
 
-# Get stream status
+puts "保存直播数据."
 begin
-  status_info = stream.status()
-  puts "Stream status() =>\n#{status_info.inspect}\n\n"
+  fname = stream_a.save()
+  puts fname
 rescue Exception => e
-  puts "Stream status() failed. Caught exception:\n#{e.http_body}\n\n"
+  puts e
 end
 
+puts "RTMP 推流地址."
+url = Pili.rtmp_publish_url("publish-rtmp.test.com", hub_name, key_a, mac, 3600)
+puts url
 
-# Generate RTMP publish URL
-publish_url = stream.rtmp_publish_url()
-puts "Stream rtmp_publish_url() =>\n#{publish_url}\n\n"
+puts "RTMP 直播放址."
+url = Pili.rtmp_play_url("live-rtmp.test.com", hub_name, key_a)
+puts url
 
+puts "HLS 直播地址."
+url = Pili.hls_play_url("live-hls.test.com", hub_name, key_a)
+puts url
 
-# Generate RTMP live play URLs
-urls = stream.rtmp_live_urls()
-puts "Stream rtmp_live_urls() =>\n#{urls.inspect}\n\n"
+puts "HDL 直播地址."
+url = Pili.hdl_play_url("live-hdl.test.com", hub_name, key_a)
+puts url
 
-
-# Generate HLS live play URLs
-urls = stream.hls_live_urls()
-puts "Stream hls_live_urls() =>\n#{urls.inspect}\n\n"
-
-
-# Generate HTTP-FLV live play URLs
-urls = stream.http_flv_live_urls()
-puts "Stream http_flv_live_urls() =>\n#{urls.inspect}\n\n"
-
-
-# Get stream segments
-begin
-  start_time = nil  # optional, integer, in second, unix timestamp
-  end_time   = nil  # optional, integer, in second, unix timestamp
-  limit      = nil  # optional, uint
-  segments = stream.segments(start_time: start_time, end_time: end_time, limit: limit)
-  puts "Stream segments() =>\n#{segments.inspect}\n\n"
-rescue Exception => e
-  puts "Stream segments() failed. Caught exception:\n#{e.http_body}\n\n"
-end
-
-
-# Generate HLS playback URLs
-start_time = 1440196065    # optional, integer, in second, unix timestamp
-end_time   = 1440196105    # optional, integer, in second, unix timestamp
-urls = stream.hls_playback_urls(start_time, end_time)
-puts "Stream hls_playback_urls() =>\n#{urls.inspect}\n\n"
-
-
-
-# Snapshot
-begin
-  name       = "imageName.jpg" # required, string
-  format     = "jpg"           # required, string
-  options = {
-    :time       => 1440067100, # optional, int64, in second, unix timestamp
-    :notify_url => nil         # optional
-  }
-  result = stream.snapshot(name, format, options)
-  puts "Stream snapshot() =>\n#{result.inspect}\n\n"
-rescue Exception => e
-  puts "Stream snapshot() failed. Caught exception:\n#{e.http_body}\n\n"
-end
-
-
-# Save Stream as
-begin
-  name       = "videoName.mp4" # required, string
-  start_time = 1440067100      # required, int64, in second, unix timestamp
-  end_time   = 1440068104      # required, int64, in second, unix timestamp
-  format     = "mp4"           # optional, string
-  notify_url = nil             # optional
-  result = stream.save_as(name, format, start_time, end_time, notify_url)
-  puts "Stream save_as() =>\n#{result.inspect}\n\n"
-rescue Exception => e
-  puts "Stream save_as() failed. Caught exception:\n#{e.http_body}\n\n"
-end
-
-
-# Delete a stream
-begin
-  result = stream.delete()
-  puts "Stream delete() =>\n#{result.inspect}\n\n"
-rescue Exception => e
-  puts "Stream delete() failed. Caught exception:\n#{e.http_body}\n\n"
-end
+puts "截图直播地址"
+url = Pili.snapshot_play_url("live-snapshot.test.com", hub_name, key_a)
+puts url
