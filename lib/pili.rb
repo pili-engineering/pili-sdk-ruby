@@ -1,11 +1,16 @@
 # coding: utf-8
 require 'json'
+require 'httparty'
+require "pili/version"
 
-require_relative "pili/version"
-require_relative "pili/config"
-require_relative "pili/exception"
-require_relative "pili/auth"
-require_relative "pili/rpc"
-require_relative "pili/client"
-require_relative "pili/hub"
-require_relative "pili/stream"
+module Pili
+  autoload :Credentials,   'pili/credentials'
+  autoload :Config,        'pili/config'
+  autoload :RPC,           'pili/rpc'
+  autoload :API,           'pili/api'
+  autoload :Utils,         'pili/utils'
+  autoload :ResponseError, 'pili/exceptions'
+
+  autoload :Hub,           'pili/hub'
+  autoload :Stream,        'pili/stream'
+end
