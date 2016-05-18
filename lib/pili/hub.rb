@@ -54,7 +54,7 @@ module Pili
     #     end
     #   end
     def list(opt = {})
-      opt["liveonly"] = false
+      opt[:liveonly] = false
       plist(opt)
     end
     
@@ -77,7 +77,7 @@ module Pili
     #     end
     #   end
     def list_live(opt = {})
-      opt["liveonly"] = true
+      opt[:liveonly] = true
       plist(opt)
     end
     

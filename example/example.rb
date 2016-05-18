@@ -79,8 +79,8 @@ rescue Pili::ResourceNotExist => e
 end
 
 puts "查询推流历史."
-records = stream_a.history_record()
-puts records
+activity = stream_a.history_activity()
+puts activity
 
 puts "保存直播数据."
 begin

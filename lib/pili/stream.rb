@@ -95,8 +95,8 @@ module Pili
     #     "start" => <Integer>,
     #     "end" => <Integer>
     #   }
-    def history_record(opt = {})
-      url = "#{@base_url}/historyrecord"
+    def history_activity(opt = {})
+      url = "#{@base_url}/historyactivity"
       if !opt.empty?
         url += "?#{URI.encode_www_form opt}"
       end
