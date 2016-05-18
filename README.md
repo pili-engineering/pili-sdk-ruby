@@ -19,7 +19,7 @@
 	- [x] 启用流: stream.enable()
  	- [x] 查询直播状态: stream.live_status()
 	- [x] 保存直播回放: stream.save(...)
-	- [x] 查询直播历史: stream.history_record(...)
+	- [x] 查询直播历史: stream.history_activity(...)
 
 ## Contents
 
@@ -43,7 +43,7 @@
 		- [Disable a Stream](#disable-a-stream)
 		- [Enable a Stream](#enable-a-stream)
 		- [Get Stream live status](#get-stream-live-status)
-		- [Get Stream history record](#get-stream-history-record)
+		- [Get Stream history activity](#get-stream-history-activity)
 		- [Save Stream live playback](#save-stream-live-playback)
 
 ## Installation
@@ -207,11 +207,11 @@ puts(status.to_json)
 # {"startAt":1463022236,"clientIP":"222.73.202.226","bps":248,"fps":{"audio":45,"vedio":28,"data":0}}
 ```
 
-#### Get Stream history record
+#### Get Stream history activity 
 
 ```ruby
-records = stream.history_record()
-puts(records.to_json)
+activity = stream.history_activity()
+puts(activity.to_json)
 # [{"start":1463022236,"end":1463022518}]
 ```
 
