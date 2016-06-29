@@ -22,18 +22,7 @@ module Pili
       length_ok = req.content_length != nil && req.content_length > 0 && req.content_length < 1024*1024
       req.body != nil && type_ok && length_ok
     end
-    
-    def qiniu_headers(req)
-      keys = []
-      req.canonical_each do |k, v|
-        if k.start_with? "X-Qiniu-"
-          keys.push(k)
-        end
-      end
-      sorted = keys.sort.map{|k| "\n#{k}: #{req[k]}"}
-      sorted.join("")
-    end
-    
+ 
     def sign_request(req)
       data = "#{req.method} #{req.path}"
       
@@ -45,7 +34,6 @@ module Pili
         data += "\nContent-Type: #{content_type}"
       end
       
-      data += qiniu_headers(req)
       data += "\n\n"
       
       if inc_body(req, content_type)
@@ -55,6 +43,6 @@ module Pili
       sign(data)
     end
     
-    private :inc_body, :qiniu_headers
+    private :inc_body
   end
 end
