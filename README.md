@@ -3,7 +3,7 @@
 ## Features
 
 - URL
-	- [x] RTMP推流地址: rtmp_publish_url(domain, hub, stream_key, mac, expire_after_days)
+	- [x] RTMP推流地址: rtmp_publish_url(domain, hub, stream_key, mac, expire_after_seconds)
 	- [x] RTMP直播地址: rtmp_play_url(domain, hub, stream_key)
 	- [x] HLS直播地址: hls_play_url(domain, hub, stream_key)
 	- [x] HDL直播地址: hdl_play_url(domain, hub, stream_key)
