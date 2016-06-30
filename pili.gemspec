@@ -4,7 +4,7 @@ $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
 require 'pili/version'
 
 Gem::Specification.new do |spec|
-  spec.name          = "pili"
+  spec.name          = "piliv2"
   spec.version       = Pili::VERSION
   spec.authors       = ["Pili Engineer"]
   spec.email         = ["pili@qiniu.com"]
@@ -18,6 +18,6 @@ Gem::Specification.new do |spec|
   spec.test_files    = spec.files.grep(%r{^(test|spec|features)/})
   spec.require_paths = ["lib"]
 
-  spec.add_development_dependency "bundler"	
+  spec.add_development_dependency "bundler"
   spec.add_development_dependency "rake"
 end

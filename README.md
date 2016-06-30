@@ -50,7 +50,7 @@
 
 Add this line to your application's Gemfile:
 
-    gem 'pili'
+    gem 'piliv2'
 
 And then execute:
 
@@ -58,7 +58,7 @@ And then execute:
 
 Or install it yourself as:
 
-    $ gem install pili
+    $ gem install piliv2
 
 
 ## Usage
@@ -66,7 +66,7 @@ Or install it yourself as:
 ### Configuration
 
 ```ruby
-require "pili"
+require "piliv2"
 
 access_key = "<QINIU ACCESS KEY>" # 替换成自己 Qiniu 账号的 AccessKey.
 secret_key = "<QINIU SECRET KEY>" # 替换成自己 Qiniu 账号的 SecretKey.
