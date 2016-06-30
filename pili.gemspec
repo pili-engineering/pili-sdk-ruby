@@ -6,7 +6,7 @@ require 'pili/version'
 Gem::Specification.new do |spec|
   spec.name          = "pili"
   spec.version       = Pili::VERSION
-  spec.authors       = ["Miclle"]
+  spec.authors       = ["Pili Engineer"]
   spec.email         = ["pili@qiniu.com"]
   spec.summary       = %q{Pili Streaming Cloud server-side library for Ruby.}
   spec.description   = %q{Pili Streaming Cloud server-side library for Ruby.}
@@ -18,8 +18,6 @@ Gem::Specification.new do |spec|
   spec.test_files    = spec.files.grep(%r{^(test|spec|features)/})
   spec.require_paths = ["lib"]
 
-  spec.add_development_dependency "bundler", "~> 1.7"
-  spec.add_development_dependency "rake", "~> 10.0"
-
-  spec.add_runtime_dependency 'httparty', '~> 0.13.3'
+  spec.add_development_dependency "bundler"	
+  spec.add_development_dependency "rake"
 end

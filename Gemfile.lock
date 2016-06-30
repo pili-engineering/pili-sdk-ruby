@@ -1,23 +1,17 @@
 PATH
   remote: .
   specs:
-    pili (1.5.0)
-      httparty (~> 0.13.3)
+    pili (2.0.0)
 
 GEM
   remote: https://rubygems.org/
   specs:
-    httparty (0.13.3)
-      json (~> 1.8)
-      multi_xml (>= 0.5.2)
-    json (1.8.3)
-    multi_xml (0.5.5)
     rake (10.4.2)
 
 PLATFORMS
   ruby
 
 DEPENDENCIES
-  bundler (~> 1.7)
+  bundler
   pili!
-  rake (~> 10.0)
+  rake

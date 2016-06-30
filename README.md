@@ -2,51 +2,49 @@
 
 ## Features
 
-- Stream Create,Get,List
-  - [x] hub.create_stream()
-  - [x] hub.get_stream()
-  - [x] hub.list_streams()
-- Stream operations else
-  - [x] stream.to_json()
-  - [x] stream.update()
-  - [x] stream.disable()
-  - [x] stream.enable()
-  - [x] stream.status()
-  - [x] stream.rtmp_publish_url()
-  - [x] stream.rtmp_live_urls()
-  - [x] stream.hls_live_urls()
-  - [x] stream.http_flv_live_urls()
-  - [x] stream.segments()
-  - [x] stream.hls_playback_urls()
-  - [x] stream.save_as()
-  - [x] stream.snapshot()
-  - [x] stream.delete()
+- URL
+	- [x] RTMP推流地址: rtmp_publish_url(domain, hub, stream_key, mac, expire_after_seconds)
+	- [x] RTMP直播地址: rtmp_play_url(domain, hub, stream_key)
+	- [x] HLS直播地址: hls_play_url(domain, hub, stream_key)
+	- [x] HDL直播地址: hdl_play_url(domain, hub, stream_key)
+	- [x] 截图直播地址: snapshot_play_url(domain, hub, stream_key)
+- Hub
+	- [x] 创建流: hub.create(stream_key)
+	- [x] 获得流: hub.stream(stream_key)
+	- [x] 列出流: hub.list(...)
+	- [x] 列出正在直播的流: hub.list_live(...)
+- Stream
+	- [x] 流信息: stream.info()
+	- [x] 禁用流: stream.disable()
+	- [x] 启用流: stream.enable()
+ 	- [x] 查询直播状态: stream.live_status()
+	- [x] 保存直播回放: stream.save(...)
+	- [x] 查询直播历史: stream.history_activity(...)
 
 ## Contents
 
 - [Installation](#installation)
 - [Usage](#usage)
-  - [Configuration](#configuration)
-  - [Hub](#hub)
-    - [Instantiate a Pili Hub object](#instantiate-a-pili-hub-object)
-    - [Create a new Stream](#create-a-new-stream)
-    - [Get a Stream](#get-a-stream)
-    - [List Streams](#list-streams)
-  - [Stream](#stream)
-    - [To JSON String](#to-json-string)
-    - [Update a Stream](#update-a-stream)
-    - [Disable a Stream](#disable-a-stream)
-    - [Enable a Stream](#enable-a-stream)
-    - [Generate RTMP publish URL](#generate-rtmp-publish-url)
-    - [Generate RTMP live play URLs](#generate-rtmp-live-play-urls)
-    - [Generate HLS live play URLs](#generate-hls-live-play-urls)
-    - [Generate HTTP-FLV live play URLs](#generate-http-flv-live-play-urls)
-    - [Get Stream segments](#get-stream-segments)
-    - [Generate HLS playback URLs](#generate-hls-playback-urls)
-    - [Save Stream as a file](#save-stream-as-a-file)
-    - [Snapshot Stream](#snapshot-stream)
-    - [Delete a stream](#delete-a-stream)
-- [History](#history)
+    - [Configuration](#configuration)
+	- [URL](#url)
+		- [Generate RTMP publish URL](#generate-rtmp-publish-url)
+		- [Generate RTMP play URL](#generate-rtmp-play-url)
+		- [Generate HLS play URL](#generate-hls-play-url)
+		- [Generate HDL play URL](#generate-hdl-play-url)
+		- [Generate Snapshot play URL](#generate-snapshot-play-url)
+	- [Hub](#hub)
+		- [Instantiate a Pili Hub object](#instantiate-a-pili-hub-object)
+		- [Create a new Stream](#create-a-new-stream)
+		- [Get a Stream](#get-a-stream)
+		- [List Streams](#list-streams)
+		- [List live Streams](#list-live-streams)
+	- [Stream](#stream)
+		- [Get Stream info](#get-stream-info)
+		- [Disable a Stream](#disable-a-stream)
+		- [Enable a Stream](#enable-a-stream)
+		- [Get Stream live status](#get-stream-live-status)
+		- [Get Stream history activity](#get-stream-history-activity)
+		- [Save Stream live playback](#save-stream-live-playback)
 
 ## Installation
 
@@ -68,491 +66,159 @@ Or install it yourself as:
 ### Configuration
 
 ```ruby
-require 'pili'
+require "pili"
 
-ACCESS_KEY  = 'Qiniu_AccessKey'
-SECRETE_KEY = 'Qiniu_SecretKey'
+access_key = "<QINIU ACCESS KEY>" # 替换成自己 Qiniu 账号的 AccessKey.
+secret_key = "<QINIU SECRET KEY>" # 替换成自己 Qiniu 账号的 SecretKey.
+hub_name   = "<PILI HUB NAME>"    # Hub 必须事先存在.
 
-HUB_NAME    = 'Pili_Hub_Name' # The Hub must be exists before use
-
-# Change API host as necessary
-# pili.qiniuapi.com as default
-# pili-lte.qiniuapi.com is the latest RC version
-# Pili::Config.init api_host: 'pili.qiniuapi.com' # default
+mac = Pili::Mac.new(access_key, secret_key)
+client = Pili::Client.new(mac)
+hub = client.hub(hub_name)
 ```
 
+### URL
 
-## Hub
-
-### Instantiate a Pili Hub object
-```ruby
-credentials = Pili::Credentials.new(ACCESS_KEY, SECRETE_KEY)
-hub = Pili::Hub.new(credentials, HUB_NAME)
-puts "Hub initialize =>\n#{hub.inspect}\n\n"
-```
-
-
-### Create a new Stream
+#### Generate RTMP publish URL
 
 ```ruby
-begin
-  title            = nil # optional, auto-generated as default
-  publish_key      = nil # optional, auto-generated as default
-  publish_security = nil # optional, can be "dynamic" or "static", "dynamic" as default
-
-  # stream = hub.create_stream()
-  # or
-  stream = hub.create_stream(title: title, publish_key: publish_key, publish_security: publish_security)
-
-  puts "Hub create_stream() =>\n#{stream.inspect}\n\n"
-rescue Exception => e
-  puts "Hub create_stream() failed. Caught exception:\n#{e.http_body}\n\n"
-end
-
-##<Pili::Stream:0x007fdf9413ab98
-#  @credentials=#<Pili::Credentials:0x007fdf939392c8 @access_key="0QxleRjH-IGYystrYdeY5w6KdkSdJVa5SaBUbJkY", @secret_key="Vg3u2240H6JL78sfjsgLohGLjk_jO5e0cdief0g3">,
-#  @id="z1.hub1.55d886b5e3ba571322003121",
-#  @title="55d886b5e3ba571322003121",
-#  @hub="hub1",
-#  @publish_key="0e18061751841053",
-#  @publish_security="dynamic",
-#  @disabled=false,
-#  @hosts={
-#    "publish"=>{
-#      "rtmp"=>"eksg7h.publish.z1.pili.qiniup.com"
-#    },
-#    "live"=>{
-#      "hdl"=>"eksg7h.live1-hdl.z1.pili.qiniucdn.com",
-#      "hls"=>"eksg7h.live1-hls.z1.pili.qiniucdn.com",
-#      "rtmp"=>"eksg7h.live1-rtmp.z1.pili.qiniucdn.com"
-#    },
-#    "playback"=>{
-#      "hls"=>"eksg7h.playback1.z1.pili.qiniucdn.com"
-#    }
-#  },
-#  @created_at="2015-08-22T14:27:01.62Z",
-#  @updated_at="2015-08-22T14:27:01.62Z"
-#>
+url = Pili.rtmp_publish_url("publish-rtmp.test.com", "PiliSDKTest", "streamkey", 60)
+puts(url)
+# rtmp://publish-rtmp.test.com/PiliSDKTest/streamkey?e=1463023142&token=7O7hf7Ld1RrC_fpZdFvU8aCgOPuhw2K4eapYOdII:-5IVlpFNNGJHwv-2qKwVIakC0ME=
 ```
 
-
-### Get a Stream
+#### Generate RTMP play URL
 
 ```ruby
-begin
-  stream = hub.get_stream(stream.id)
-  puts "Hub get_stream() =>\n#{stream.inspect}\n\n"
-rescue Exception => e
-  puts "Hub get_stream() failed. Caught exception:\n#{e.http_body}\n\n"
-end
-
-##<Pili::Stream:0x007fdf6413ab67
-#  @credentials=#<Pili::Credentials:0x007fdf939c2238 @access_key="0QxleRjH-IGYystrYdeY5w6KdkSdJVa5SaBUbJkY", @secret_key="Vg3u2240H6JL78sfjsgLohGLjk_jO5e0cdief0g3">,
-#  @id="z1.hub1.55d886b5e3ba571322003121",
-#  @title="55d886b5e3ba571322003121",
-#  @hub="hub1",
-#  @publish_key="0e18061751841053",
-#  @publish_security="dynamic",
-#  @disabled=false,
-#  @hosts={
-#    "publish"=>{
-#      "rtmp"=>"eksg7h.publish.z1.pili.qiniup.com"
-#    },
-#    "live"=>{
-#      "hdl"=>"eksg7h.live1-hdl.z1.pili.qiniucdn.com",
-#      "hls"=>"eksg7h.live1-hls.z1.pili.qiniucdn.com",
-#      "rtmp"=>"eksg7h.live1-rtmp.z1.pili.qiniucdn.com"
-#    },
-#    "playback"=>{
-#      "hls"=>"eksg7h.playback1.z1.pili.qiniucdn.com"
-#    }
-#  },
-#  @created_at="2015-08-22T14:27:01.62Z",
-#  @updated_at="2015-08-22T14:27:01.62Z"
-#>
+url = Pili.rtmp_play_url("live-rtmp.test.com", "PiliSDKTest", "streamkey")
+puts(url)
+# rtmp://live-rtmp.test.com/PiliSDKTest/streamkey
 ```
 
-
-### List Streams
+#### Generate HLS play URL
 
 ```ruby
-begin
-  status = nil # optional, can be "connected"
-  marker = nil # optional
-  limit  = nil # optional
-  title  = nil # optional
-  streams = hub.list_streams(status: status, marker: marker, limit: limit, title: title)
-  puts "Hub list_streams() =>\n#{streams.inspect}\n\n"
-rescue Exception => e
-  puts "Hub list_streams() failed. Caught exception:\n#{e.http_body}\n\n"
-end
-
-#[
-#  #<Pili::Stream:0x007fdf94108f58>,
-#  #<Pili::Stream:0x007fdf94108f30>,
-#  #<Pili::Stream:0x007fdf94108f08>,
-#  #<Pili::Stream:0x007fdf94108ee0>,
-#  #<Pili::Stream:0x007fdf94108eb8>,
-#  #<Pili::Stream:0x007fdf94108e90>,
-#  #<Pili::Stream:0x007fdf94108e68>,
-#  #<Pili::Stream:0x007fdf94108e40>,
-#  #<Pili::Stream:0x007fdf94108e18>,
-#  #<Pili::Stream:0x007fdf94108df0>
-#]
+url = Pili.hls_play_url("live-hls.test.com", "PiliSDKTest", "streamkey")
+puts(url)
+# http://live-hls.test.com/PiliSDKTest/streamkey.m3u8
 ```
 
-
-## Stream
-
-### To JSON String
+#### Generate HDL play URL
 
 ```ruby
-json_string = stream.to_json()
-puts "Stream stream.to_json() =>\n#{json_string}\n\n"
-
-#'{
-#  "id":"z1.hub1.55d886b5e3ba571322003121",
-#  "title":"55d886b5e3ba571322003121",
-#  "hub":"hub1",
-#  "publish_key":"0e18061751841053",
-#  "publish_security":"dynamic",
-#  "disabled":false,
-#  "hosts":{
-#    "publish":{
-#      "rtmp":"eksg7h.publish.z1.pili.qiniup.com"
-#    },
-#    "live":{
-#      "http":"eksg7h.live1-http.z1.pili.qiniucdn.com",
-#      "rtmp":"eksg7h.live1-rtmp.z1.pili.qiniucdn.com"
-#    },
-#    "playback":{
-#      "http":"eksg7h.playback1.z1.pili.qiniucdn.com"
-#    }
-#  },
-#  "created_at":"2015-08-22T10:27:01.62-04:00",
-#  "updated_at":"2015-08-22T10:27:01.62-04:00"
-#}'
+url = Pili.hdl_play_url("live-hdl.test.com", "PiliSDKTest", "streamkey")
+puts(url)
+# http://live-hdl.test.com/PiliSDKTest/streamkey.flv
 ```
 
-### Update a Stream
+#### Generate Snapshot play URL
 
 ```ruby
-begin
-  stream.publish_key      = "new_secret_words" # optional
-  stream.publish_security = "static"           # optional, can be "dynamic" or "static", "dynamic" as default
-  stream.disabled         = nil                # optional, can be true or false
-  stream = stream.update()
-  puts "Stream update() =>\n#{stream.inspect}\n\n"
-rescue Exception => e
-  puts "Stream update() failed. Caught exception:\n#{e.http_body}\n\n"
-end
-
-##<Pili::Stream:0x007fdf6413ab67
-#  @credentials=#<Pili::Credentials:0x007fdf939c2238 @access_key="0QxleRjH-IGYystrYdeY5w6KdkSdJVa5SaBUbJkY", @secret_key="Vg3u2240H6JL78sfjsgLohGLjk_jO5e0cdief0g3">,
-#  @id="z1.hub1.55d886b5e3ba571322003121",
-#  @title="55d886b5e3ba571322003121",
-#  @hub="hub1",
-#  @publish_key="new_secret_words",
-#  @publish_security="static",
-#  @disabled=false,
-#  @hosts={
-#    "publish"=>{
-#      "rtmp"=>"eksg7h.publish.z1.pili.qiniup.com"
-#    },
-#    "live"=>{
-#      "hdl"=>"eksg7h.live1-hdl.z1.pili.qiniucdn.com",
-#      "hls"=>"eksg7h.live1-hls.z1.pili.qiniucdn.com",
-#      "rtmp"=>"eksg7h.live1-rtmp.z1.pili.qiniucdn.com"
-#    },
-#    "playback"=>{
-#      "hls"=>"eksg7h.playback1.z1.pili.qiniucdn.com"
-#    }
-#  },
-#  @created_at="2015-08-22T14:27:01.62Z",
-#  @updated_at="2015-08-22T14:27:01.62Z"
-#>
+url = Pili.snapshot_play_url("live-snapshot.test.com", "PiliSDKTest", "streamkey")
+puts(url)
+# http://live-snapshot.test.com/PiliSDKTest/streamkey.jpg
 ```
 
-### Disable a Stream
+### Hub
+
+#### Instantiate a Pili Hub object
 
 ```ruby
-begin
-  stream = stream.disable()
-  puts "Stream disable() =>\n#{stream.inspect}\n\n"
-rescue Exception => e
-  puts "Stream disable() failed. Caught exception:\n#{e.http_body}\n\n"
-end
-
-##<Pili::Stream:0x007fdf6413ab67
-#  @credentials=#<Pili::Credentials:0x007fdf939c2238 @access_key="0QxleRjH-IGYystrYdeY5w6KdkSdJVa5SaBUbJkY", @secret_key="Vg3u2240H6JL78sfjsgLohGLjk_jO5e0cdief0g3">,
-#  @id="z1.hub_name.55d886b5e3ba571322003121",
-#  @title="55d886b5e3ba571322003121",
-#  @hub="hub1",
-#  @publish_key="new_secret_words",
-#  @publish_security="static",
-#  @disabled=true,
-#  @hosts={
-#    "publish"=>{
-#      "rtmp"=>"eksg7h.publish.z1.pili.qiniup.com"
-#    },
-#    "live"=>{
-#      "hdl"=>"eksg7h.live1-hdl.z1.pili.qiniucdn.com",
-#      "hls"=>"eksg7h.live1-hls.z1.pili.qiniucdn.com",
-#      "rtmp"=>"eksg7h.live1-rtmp.z1.pili.qiniucdn.com"
-#    },
-#    "playback"=>{
-#      "hls"=>"eksg7h.playback1.z1.pili.qiniucdn.com"
-#    }
-#  },
-#  @created_at="2015-08-22T14:27:01.62Z",
-#  @updated_at="2015-08-22T14:27:01.62Z"
-#>
+mac = Pili::Mac.new(access_key, secret_key)
+client = Pili::Client.new(mac)
+hub = client.hub("PiliSDKTest")
 ```
 
-
-### Enable a Stream
+#### Create a new Stream
 
 ```ruby
-begin
-  stream = stream.enable()
-  puts "Stream enable() =>\n#{stream.inspect}\n\n"
-rescue Exception => e
-  puts "Stream enable() failed. Caught exception:\n#{e.http_body}\n\n"
-end
-
-##<Pili::Stream:0x007fdf6413ab67
-#  @credentials=#<Pili::Credentials:0x007fdf939c2238 @access_key="0QxleRjH-IGYystrYdeY5w6KdkSdJVa5SaBUbJkY", @secret_key="Vg3u2240H6JL78sfjsgLohGLjk_jO5e0cdief0g3">,
-#  @id="z1.hub1.55d886b5e3ba571322003121",
-#  @title="55d886b5e3ba571322003121",
-#  @hub="hub1",
-#  @publish_key="new_secret_words",
-#  @publish_security="static",
-#  @disabled=false,
-#  @hosts={
-#    "publish"=>{
-#      "rtmp"=>"eksg7h.publish.z1.pili.qiniup.com"
-#    },
-#    "live"=>{
-#      "hdl"=>"eksg7h.live1-hdl.z1.pili.qiniucdn.com",
-#      "hls"=>"eksg7h.live1-hls.z1.pili.qiniucdn.com",
-#      "rtmp"=>"eksg7h.live1-rtmp.z1.pili.qiniucdn.com"
-#    },
-#    "playback"=>{
-#      "hls"=>"eksg7h.playback1.z1.pili.qiniucdn.com"
-#    }
-#  },
-#  @created_at="2015-08-22T14:27:01.62Z",
-#  @updated_at="2015-08-22T14:27:01.62Z"
-#>
+stream = hub.create("streamkey")
+puts(stream.info.to_json)
+# {"hub":"PiliSDKTest","key":"streamkey","disabled":false}
 ```
 
-
-# Get Stream status
+#### Get a Stream
 
 ```ruby
-begin
-  status_info = stream.status()
-  puts "Stream status() =>\n#{status_info.inspect}\n\n"
-rescue Exception => e
-  puts "Stream status() failed. Caught exception:\n#{e.http_body}\n\n"
-end
-
-#{
-#  "startFrom"=>"2015-09-10T05:58:10.289+08:00",
-#  "addr"=>"222.73.202.226:2572",
-#  "status"=>"connected",
-#  "bytesPerSecond"=>16870.200000000001,
-#  "framesPerSecond"=>{
-#    "audio"=>42.200000000000003,
-#    "video"=>14.733333333333333,
-#    "data"=>0.066666666666666666
-#  }
-#}
+stream = hub.stream("streamkey")
+puts(stream.info.to_json)
+# {"hub":"PiliSDKTest","key":"streamkey","disabled":false}
 ```
 
-
-### Generate RTMP publish URL
+#### List Streams
 
 ```ruby
-publish_url = stream.rtmp_publish_url()
-puts "Stream rtmp_publish_url() =>\n#publish_url}\n\n"
-
-# "rtmp://eksg7h.publish.z1.pili.qiniup.com/hub1/55d886b5e3ba571322003121?nonce=1440256178&token=ikRpJBxr4qkfRJkAz4dtiaWITAQ="
+keys, marker = hub.list(:prefix=>"str", :limit=>10)
+puts keys.to_s, marker
+# [<keys...>], <marker>
 ```
 
-
-### Generate RTMP live play URLs
+#### List live Streams
 
 ```ruby
-urls = stream.rtmp_live_urls()
-puts "Stream rtmp_live_urls() =>\n#{urls.inspect}\n\n"
-
-# {
-#   "ORIGIN"=>"rtmp://eksg7h.live1-rtmp.z1.pili.qiniucdn.com/hub_name/55d886b5e3ba571322003121"
-# }
+keys, marker = hub.list_live(:prefix=>"str", :limit=>10)
+puts keys.to_s, marker
+# [<keys...>], <marker>
 ```
 
+### Stream
 
-### Generate HLS live play URLs
+#### Get Stream info
 
 ```ruby
-urls = stream.hls_live_urls()
-puts "Stream hls_live_urls() =>\n#{urls.inspect}\n\n"
-
-# {
-#   "ORIGIN"=>"http://eksg7h.live1-hls.z1.pili.qiniucdn.com/hub1/55d886b5e3ba571322003121.m3u8"
-# }
+stream = hub.stream(key)
+puts(stream.info.to_json)
+# {"hub": "PiliSDKTest", "key": "streamkey", "disabled": false}
 ```
 
-
-### Generate HTTP-FLV live play URLs
+#### Disable a Stream
 
 ```ruby
-urls = stream.http_flv_live_urls()
-puts "Stream http_flv_live_urls() =>\n#{urls.inspect}\n\n"
+stream = hub.stream("streamkey")
+puts("before disable: #{stream.info.to_json}")
 
-# {
-#   "ORIGIN"=>"http://eksg7h.live1-hdl.z1.pili.qiniucdn.com/hub1/55d886b5e3ba571322003121.flv"
-# }
+stream.disable()
+
+stream = hub.stream("streamkey")
+puts("after disable: #{stream.info.to_json}")
+# before disable: {"hub":"PiliSDKTest","key":"streamkey","disabled":false}
+# after disable: {"hub":"PiliSDKTest","key":"streamkey","disabled":true}
 ```
 
-
-### Get Stream segments
+#### Enable a Stream
 
 ```ruby
-begin
-  start_time = nil  # optional, integer, in second, unix timestamp
-  end_time   = nil  # optional, integer, in second, unix timestamp
-  limit      = nil  # optional, uint
+stream = hub.stream("streamkey")
+puts("before enable: #{stream.info.to_json}")
 
-  segments = stream.segments(start_time: start_time, end_time: end_time, limit: limit)
+stream.enable()
 
-  puts "Stream segments() =>\n#{segments.inspect}\n\n"
-rescue Exception => e
-  puts "Stream segments() failed. Caught exception:\n#{e.http_body}\n\n"
-end
-
-# {
-#   "segments":[
-#     {
-#       "start":1440256809,
-#       "end":1440256842
-#     },
-#     {
-#       "start":1440256842,
-#       "end":1440256852
-#     }
-#   ]
-# }
+stream = hub.get("streamkey")
+puts("after enable: #{stream.info.to_json}")
+# before disable: {"hub":"PiliSDKTest","key":"streamkey","disabled":true}
+# after disable: {"hub":"PiliSDKTest","key":"streamkey","disabled":false}
 ```
 
-
-### Generate HLS playback URLs
+#### Get Stream live status
 
 ```ruby
-start_time = 1440196065 # optional, integer, in second, unix timestamp
-end_time   = 1440196105 # optional, integer, in second, unix timestamp
-urls = stream.hls_playback_urls(start_time, end_time)
-puts "Stream hls_playback_urls() =>\n#{urls.inspect}\n\n"
-# {
-#   "ORIGIN"=>"http://eksg7h.playback1.z1.pili.qiniucdn.com/hub1/55d886b5e3ba571322003121.m3u8?start=1440196065&end=1440196105"
-# }
+status = stream.live_status()
+puts(status.to_json)
+# {"startAt":1463022236,"clientIP":"222.73.202.226","bps":248,"fps":{"audio":45,"vedio":28,"data":0}}
 ```
 
-
-### Save Stream as a file
+#### Get Stream history activity 
 
 ```ruby
-begin
-  name       = "videoName.mp4" # required, string
-  start_time = 1440067100      # required, int64, in second, unix timestamp
-  end_time   = 1440068104      # required, int64, in second, unix timestamp
-  format     = "mp4"           # optional, string
-  notify_url = nil             # optional
-  pipeline   = nil             # optional
-  result = stream.save_as(name, format, start_time, end_time, notify_url, pipeline)
-  puts "Stream save_as() =>\n#{result.inspect}\n\n"
-rescue Exception => e
-  puts "Stream save_as() failed. Caught exception:\n#{e.http_body}\n\n"
-end
-
-# {
-#   "url"=>"http://eksg7h.vod1.z1.pili.qiniucdn.com/recordings/z1.hub1.55d886b5e3ba571322003121/videoName.m3u8",
-#   "targetUrl"=>"http://eksg7h.vod1.z1.pili.qiniucdn.com/recordings/z1.hub1.55d886b5e3ba571322003121/videoName.mp4",
-#   "persistentId"=>"z1.55d894f77823de5a49b52a16"
-# }
+activity = stream.history_activity()
+puts(activity.to_json)
+# [{"start":1463022236,"end":1463022518}]
 ```
 
-While invoking `saveAs()` and `snapshot()`, you can get processing state via Qiniu FOP Service using `persistentId`.
-API: `curl -D GET http://api.qiniu.com/status/get/prefop?id={PersistentId}`
-Doc reference: <http://developer.qiniu.com/docs/v6/api/overview/fop/persistent-fop.html#pfop-status>
-
-
-### Snapshot Stream
+#### Save Stream live playback
 
 ```ruby
-begin
-  name       = "imageName.jpg"  # required, string
-  format     = "jpg"            # required, string
-  options = {
-    :time       => 1440067100,  # optional, int64, in second, unix timestamp
-    :notify_url => nil          # optional
-  }
-  result = stream.snapshot(name, format, options)
-  puts "Stream snapshot() =>\n#{result.inspect}\n\n"
-rescue Exception => e
-  puts "Stream snapshot() failed. Caught exception:\n#{e.http_body}\n\n"
-end
-
-# {
-#   "targetUrl"=>"http://eksg7h.static1.z1.pili.qiniucdn.com/snapshots/z1.hub1.55d886b5e3ba571322003121/imageName.jpg",
-#   "persistentId"=>"z1.55d8948f7823de5a49b52561"
-# }
+fname = stream.save()
+puts(fname)
+# recordings/z1.PiliSDKTest.streamkey/1463156847_1463157463.m3u8
 ```
-
-
-### Delete a Stream
-
-```ruby
-begin
-  result = stream.delete()
-  puts "Stream delete() =>\n#{result.inspect}\n\n"
-rescue Exception => e
-  puts "Stream delete() failed. Caught exception:\n#{e.http_body}\n\n"
-end
-
-# nil
-```
-
-
-## History
-
-- 1.5.4
-  - Add pipeline in saveAs
-- 1.5.3
-  - Use saveas in hls_playback_urls
-- 1.5.0
-  - Add stream.http_flv_live_urls()
-  - Add stream.disable()
-  - Add stream.enable()
-  - Add stream.snapshot()
-- 1.3.0
-  - Add stream.saveas()
-- 1.2.0
-  - Add Client, Stream class
-- 1.0.1
-  - Add stream.status()
-  - Update stream.update()
-- 1.0.0
-  - Update README create stream example code.
-- 0.1.3
-  - Update README create stream example code.
-- 0.1.2
-  - Fix stream list method parameter type.
-- 0.1.0
-  - Update README
-  - Update get milliseconds method
-- 0.0.1
-  - Init SDK
-  - Add Stream API
-  - Add publish and play policy
