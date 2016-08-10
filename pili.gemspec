@@ -9,7 +9,7 @@ Gem::Specification.new do |spec|
   spec.authors       = ["Pili Engineer"]
   spec.email         = ["pili@qiniu.com"]
   spec.summary       = %q{Pili Streaming Cloud Server-Side Library For Ruby.}
-  spec.description   = %q{Pili Streaming Cloud Server-Side Library For Ruby.}
+  spec.description   = %q{Pili Streaming Cloud Server-Side Library For Ruby. Quick setup, fast play.}
   spec.homepage      = "https://github.com/pili-engineering/pili-sdk-ruby"
   spec.license       = "MIT"
 
@@ -18,6 +18,6 @@ Gem::Specification.new do |spec|
   spec.test_files    = spec.files.grep(%r{^(test|spec|features)/})
   spec.require_paths = ["lib"]
 
-  spec.add_development_dependency "bundler"
-  spec.add_development_dependency "rake"
+  spec.add_development_dependency "bundler", '~> 0'
+  spec.add_development_dependency "rake",  '~> 0'
 end
