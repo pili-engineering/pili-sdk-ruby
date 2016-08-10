@@ -1,4 +1,4 @@
-require 'pili'
+require 'piliv2'
 
 access_key = ENV["PILI_ACCESS_KEY"]
 secret_key = ENV["PILI_SECRET_KEY"]
