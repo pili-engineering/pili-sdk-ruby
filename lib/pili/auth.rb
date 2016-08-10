@@ -1,5 +1,6 @@
 # coding: utf-8
-require 'digest/hmac'
+
+require 'openssl'
 require "base64"
 
 module Pili
@@ -13,7 +14,8 @@ module Pili
     end
 
     def sign(data)
-      signature = Base64.urlsafe_encode64(Digest::HMAC.digest(data, @secret_key, Digest::SHA1))
+      digest = OpenSSL::HMAC.digest(OpenSSL::Digest.new("sha1"), @secret_key, data)
+      signature = Base64.urlsafe_encode64(digest)
       "#{@access_key}:#{signature}"
     end
     
