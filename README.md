@@ -66,7 +66,7 @@ Or install it yourself as:
 ### Configuration
 
 ```ruby
-require "piliv2"
+require "pili"
 
 access_key = "<QINIU ACCESS KEY>" # 替换成自己 Qiniu 账号的 AccessKey.
 secret_key = "<QINIU SECRET KEY>" # 替换成自己 Qiniu 账号的 SecretKey.
