@@ -82,7 +82,7 @@ hub = client.hub(hub_name)
 #### Generate RTMP publish URL
 
 ```ruby
-url = Pili.rtmp_publish_url("publish-rtmp.test.com", "PiliSDKTest", "streamkey", 60)
+url = Pili.rtmp_publish_url("publish-rtmp.test.com", "PiliSDKTest", "streamkey", mac, 60)
 puts(url)
 # rtmp://publish-rtmp.test.com/PiliSDKTest/streamkey?e=1463023142&token=7O7hf7Ld1RrC_fpZdFvU8aCgOPuhw2K4eapYOdII:-5IVlpFNNGJHwv-2qKwVIakC0ME=
 ```

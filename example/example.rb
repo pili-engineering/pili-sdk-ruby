@@ -86,7 +86,7 @@ puts "保存直播数据."
 begin
   fname = stream_a.save()
   puts fname
-rescue Exception => e
+rescue => e
   puts e
 end
 
