@@ -135,7 +135,7 @@ module Pili
 
 
     def save_as(name, format, start_time, end_time, notify_url = nil, pipeline = nil)
-      API.save_stream_as(@credentials, @id, name, format, start_time, end_time, notify_url)
+      API.save_stream_as(@credentials, @id, name, format, start_time, end_time, notify_url, pipeline)
     end
 
 
