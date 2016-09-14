@@ -4,7 +4,7 @@ require "json"
 
 module Pili
 
-  class RPCError < Exception
+  class RPCError < RuntimeError
     
     attr_reader :resp
   
