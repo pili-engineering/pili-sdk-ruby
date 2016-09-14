@@ -526,7 +526,8 @@ end
 
 
 ## History
-
+- 1.5.5
+  - Fix pipeline in saveAs
 - 1.5.4
   - Add pipeline in saveAs
 - 1.5.3
