@@ -17,6 +17,7 @@
 - Stream
 	- [x] 流信息: stream.info()
 	- [x] 禁用流: stream.disable()
+	- [x] 禁用流: stream.disable_till(timestamp)
 	- [x] 启用流: stream.enable()
  	- [x] 查询直播状态: stream.live_status()
 	- [x] 保存直播回放: stream.saveas(...)
@@ -44,6 +45,7 @@
 	- [Stream](#stream)
 		- [Get Stream info](#get-stream-info)
 		- [Disable a Stream](#disable-a-stream)
+		- [Disable a Stream with timestamp](#disable-a-stream-with-timestamp)
 		- [Enable a Stream](#enable-a-stream)
 		- [Get Stream live status](#get-stream-live-status)
 		- [Get Stream history activity](#get-stream-history-activity)
@@ -196,6 +198,25 @@ stream = hub.stream("streamkey")
 puts("after disable: #{stream.info.to_json}")
 # before disable: {"hub":"PiliSDKTest","key":"streamkey","disabled":false}
 # after disable: {"hub":"PiliSDKTest","key":"streamkey","disabled":true}
+```
+
+#### Disable a Stream with timestamp
+
+```ruby
+stream = hub.stream("streamkey")
+puts("before disable: #{stream.info.to_json}")
+
+stream.disable_till(Time.now.to_i + 10)
+
+puts("after disable: #{stream.info.to_json}")
+
+sleep(10)
+
+puts("after 10 seconds: #{stream.info.to_json}")
+
+# before disable: {"hub":"PiliSDKTest","key":"streamkey","disabled":false}
+# after disable: {"hub":"PiliSDKTest","key":"streamkey","disabled":true}
+# before 10 seconds: {"hub":"PiliSDKTest","key":"streamkey","disabled":false}
 ```
 
 #### Enable a Stream

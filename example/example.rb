@@ -70,6 +70,17 @@ puts "启用流."
 stream_a.enable()
 puts stream_a.info
 
+puts "禁用流 10 秒"
+puts("before disable: #{stream_a.info.to_json}")
+
+stream_a.disable_till(Time.now.to_i + 10)
+
+puts("after disable: #{stream_a.info.to_json}")
+
+sleep(10)
+
+puts("after 10 seconds: #{stream_a.info.to_json}")
+
 puts "查询直播状态."
 begin
   status = stream_a.live_status()

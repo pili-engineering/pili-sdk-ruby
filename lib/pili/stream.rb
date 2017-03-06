@@ -47,9 +47,16 @@ module Pili
       StreamInfo.new @hub, @key, ret["disabledTill"]
     end
     
-    # 禁用一个流.
+    # 无限期禁用一个流.
     def disable
-      @client.rpc.call_with_json("POST", "#{@base_url}/disabled", {:disabledTill=>-1})
+      disable_till(-1)
+    end
+
+    # 禁用一个流.
+    # 参数：
+    #     timestamp 解除禁用的时间戳
+    def disable_till(timestamp)
+      @client.rpc.call_with_json("POST", "#{@base_url}/disabled", {:disabledTill=>timestamp})
     end
     
     # 启用一个流.
