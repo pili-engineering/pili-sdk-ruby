@@ -13,6 +13,7 @@
 	- [x] 获得流: hub.stream(stream_key)
 	- [x] 列出流: hub.list(...)
 	- [x] 列出正在直播的流: hub.list_live(...)
+	- [x] 批量查询直播信息: hub.batch_query_live_status(stream_titles)
 - Stream
 	- [x] 流信息: stream.info()
 	- [x] 禁用流: stream.disable()
@@ -38,6 +39,7 @@
 		- [Get a Stream](#get-a-stream)
 		- [List Streams](#list-streams)
 		- [List live Streams](#list-live-streams)
+		- [Batch query live status](#batch-query-live-status)
 	- [Stream](#stream)
 		- [Get Stream info](#get-stream-info)
 		- [Disable a Stream](#disable-a-stream)
@@ -159,6 +161,15 @@ puts keys.to_s, marker
 keys, marker = hub.list_live(:prefix=>"str", :limit=>10)
 puts keys.to_s, marker
 # [<keys...>], <marker>
+```
+
+#### Batch query live status
+
+```ruby
+live_statuses = hub.batch_query_live_status(["stream1", "stream2"])
+puts live_statuses
+# {"startAt"=>1488798455, "clientIP"=>"119.130.107.231:35018", "bps"=>921960, "fps"=>{"audio"=>44, "video"=>29, "data"=>0}, "key"=>"stream1"}
+# {"startAt"=>1488798287, "clientIP"=>"119.130.107.231:55924", "bps"=>867328, "fps"=>{"audio"=>42, "video"=>9, "data"=>0}, "key"=>"stream2"}
 ```
 
 ### Stream

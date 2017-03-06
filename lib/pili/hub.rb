@@ -80,6 +80,34 @@ module Pili
       opt[:liveonly] = true
       plist(opt)
     end
+
+    # 批量查询直播实时信息
+    #
+    # 参数：
+    #
+    # stream_titles 字符串数组，其中元素是想要查询的流的标题。
+    #
+    # 返回：
+    #
+    #   {
+    #     "key" => <String>, # 流标题
+    #     "startAt" => <Integer>, # 直播开始的 Unix 时间戳, 0 表示当前没在直播.
+    #     "clientIp" => <String>, # 直播的客户端 IP.
+    #     "bps" => <Integer>, # 直播的码率、帧率信息.
+    #     "fps" => {
+    #       "audio" => <Integer>,
+    #       "video" => <Integer>,
+    #       "data" => <Integer>
+    #     }
+    #   }
+    #
+    # 注意：
+    #
+    # 查询的流不存在或不在直播不会出现在返回结果里。
+    def batch_query_live_status(stream_titles)
+      ret = @client.rpc.call_with_json("POST", "#{@base_url}/livestreams", {:items=>stream_titles})
+      ret["items"]
+    end
     
     def to_s
       "#<#{self.class} #{@hub}>"
