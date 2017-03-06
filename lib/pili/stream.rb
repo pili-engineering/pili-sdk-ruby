@@ -84,6 +84,20 @@ module Pili
       ret = @client.rpc.call_with_json("POST", "#{@base_url}/saveas", opt)
       ret["fname"]
     end
+
+    # 保存直播截图
+    #
+    # 参数：
+    #     fname 保存到存储空间的文件名，可选，不指定系统会随机生成。
+    #     time 整数，可选，Unix 时间戳，要保存截图的时间点，不指定则为当前时间。
+    #     format 保存的文件格式，可选，默认为jpg。
+    #
+    # 返回：
+    #     fname => <String> # 字符串，表示保存后在存储空间里的文件名。
+    def snapshot(opt = {})
+      ret = @client.rpc.call_with_json("POST", "#{@base_url}/snapshot", opt)
+      ret["fname"]
+    end
     
     # 查询直播历史.
     #

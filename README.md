@@ -20,6 +20,7 @@
 	- [x] 启用流: stream.enable()
  	- [x] 查询直播状态: stream.live_status()
 	- [x] 保存直播回放: stream.save(...)
+	- [x] 保存直播截图: stream.snapshot(...)
 	- [x] 查询直播历史: stream.history_activity(...)
 
 ## Contents
@@ -47,6 +48,7 @@
 		- [Get Stream live status](#get-stream-live-status)
 		- [Get Stream history activity](#get-stream-history-activity)
 		- [Save Stream live playback](#save-stream-live-playback)
+		- [Save Stream snapshot](#save-stream-snapshot)
 
 ## Installation
 
@@ -233,3 +235,8 @@ fname = stream.save()
 puts(fname)
 # recordings/z1.PiliSDKTest.streamkey/1463156847_1463157463.m3u8
 ```
+#### Save Stream snapshot
+```ruby
+fname = stream.snapshot()
+puts(fname)
+# stream-title-4532162526321415963.jpg
