@@ -77,12 +77,21 @@ module Pili
     
     # 保存直播回放.
     # 
-    # 参数: start, end 是 Unix 时间戳, 限定了保存的直播的时间范围, 0 值表示不限定, 系统会默认保存最近一次直播的内容.
-    # 
-    # 返回保存的文件名, 由系统生成.
-    def save(opt = {})
+    # 参数：
+    #     fname: 保存到存储空间的文件名，可选，不指定系统会随机生成
+    #     start: 整数，可选，Unix 时间戳，要保存的直播的起始时间，不指定或 0 值表示从第一次直播开始
+    #     end: 整数，可选，Unix 时间戳，要保存的直播的结束时间，不指定或 0 值表示当前时间
+    #     format: 保存的文件格式，可选，默认为m3u8，如果指定其他格式，则保存动作为异步模式
+    #     pipeline: 异步模式时，dora的私有队列，可选，不指定则使用公共队列
+    #     notify: 异步模式时，保存成功回调通知地址，可选，不指定则不通知
+    #     expireDays: 更改ts文件的过期时间，可选，默认为永久保存 -1表示不更改ts文件的生命周期，正值表示修改ts文件的生命周期为expireDays
+    #
+    # 返回：
+    #     fname: 字符串，表示保存后在存储空间里的文件名。
+    #     persistentID: 字符串，持久化异步处理任务ID，异步模式才会返回该字段，通常用不到该字段
+    def saveas(opt = {})
       ret = @client.rpc.call_with_json("POST", "#{@base_url}/saveas", opt)
-      ret["fname"]
+      [ret["fname"], ret["persistentID"]]
     end
 
     # 保存直播截图

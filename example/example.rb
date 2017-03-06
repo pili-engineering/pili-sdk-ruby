@@ -84,8 +84,8 @@ puts activity
 
 puts "保存直播数据."
 begin
-  fname = stream_a.save()
-  puts fname
+  fname, persistentID = stream_a.saveas(:format => "mp4")
+  puts fname, persistentID
 rescue => e
   puts e
 end

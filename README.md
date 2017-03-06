@@ -7,7 +7,7 @@
 	- [x] RTMP直播地址: rtmp_play_url(domain, hub, stream_key)
 	- [x] HLS直播地址: hls_play_url(domain, hub, stream_key)
 	- [x] HDL直播地址: hdl_play_url(domain, hub, stream_key)
-	- [x] 截图直播地址: snapshot_play_url(domain, hub, stream_key)
+	- [x] 直播封面地址: snapshot_play_url(domain, hub, stream_key)
 - Hub
 	- [x] 创建流: hub.create(stream_key)
 	- [x] 获得流: hub.stream(stream_key)
@@ -19,7 +19,7 @@
 	- [x] 禁用流: stream.disable()
 	- [x] 启用流: stream.enable()
  	- [x] 查询直播状态: stream.live_status()
-	- [x] 保存直播回放: stream.save(...)
+	- [x] 保存直播回放: stream.saveas(...)
 	- [x] 保存直播截图: stream.snapshot(...)
 	- [x] 查询直播历史: stream.history_activity(...)
 
@@ -231,9 +231,10 @@ puts(activity.to_json)
 #### Save Stream live playback
 
 ```ruby
-fname = stream.save()
-puts(fname)
-# recordings/z1.PiliSDKTest.streamkey/1463156847_1463157463.m3u8
+fname, persistentID = stream.saveas(:format => "mp4")
+puts(fname, persistentID)
+# recordings/z1.PiliSDKTest.streamkey/1463156847_1463157463.mp4
+# z1.58bd753a8a3c0c3794a1d6ff
 ```
 #### Save Stream snapshot
 ```ruby
