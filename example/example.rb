@@ -62,6 +62,10 @@ rescue Pili::ResourceNotExist => e
   puts e
 end
 
+puts "批量查询直播信息."
+live_statuses = hub.batch_query_live_status([key_a, key_b])
+puts live_statuses
+
 puts "禁用流."
 stream_a.disable()
 puts stream_a.info
@@ -71,28 +75,32 @@ stream_a.enable()
 puts stream_a.info
 
 puts "禁用流 10 秒"
-puts("before disable: #{stream_a.info.to_json}")
-
-stream_a.disable_till(Time.now.to_i + 10)
-
-puts("after disable: #{stream_a.info.to_json}")
-
-sleep(10)
-
-puts("after 10 seconds: #{stream_a.info.to_json}")
+begin
+  puts("before disable: #{stream_a.info.to_json}")
+  stream_a.disable_till(Time.now.to_i + 10)
+  puts("after disable: #{stream_a.info.to_json}")
+  sleep(10)
+  puts("after 10 seconds: #{stream_a.info.to_json}")
+rescue Pili::ResourceNotExist => e
+  puts e
+end
 
 puts "查询直播状态."
 begin
   status = stream_a.live_status()
-  puts keys, marker
+  puts status
 rescue Pili::ResourceNotExist => e
   puts e
 end
 
 puts "更改流的实时转码规格"
-puts stream_a.info.to_json
-stream_a.update_converts(["720p", "480p"])
-puts stream_a.info.to_json
+begin
+  puts stream_a.info.to_json
+  stream_a.update_converts(["720p", "480p"])
+  puts stream_a.info.to_json
+rescue => e
+  puts e
+end
 
 puts "查询推流历史."
 activity = stream_a.history_activity()
@@ -102,6 +110,14 @@ puts "保存直播数据."
 begin
   fname, persistentID = stream_a.saveas(:format => "mp4")
   puts fname, persistentID
+rescue => e
+  puts e
+end
+
+puts "保存直播截图."
+begin
+  fname = stream_a.snapshot()
+  puts(fname)
 rescue => e
   puts e
 end
