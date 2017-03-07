@@ -4,7 +4,7 @@ require "base64"
 
 module Pili
   class StreamInfo
-    attr_reader :hub, :key
+    attr_reader :hub, :title
     
     # 表示禁用结束的时间, 0 表示不禁用, -1 表示永久禁用.
     attr_reader :disabled_till
@@ -12,9 +12,9 @@ module Pili
     # 流转码配置数组
     attr_reader :converts
   
-    def initialize(hub, key, disabled_till, converts)
+    def initialize(hub, title, disabled_till, converts)
       @hub = hub
-      @key = key
+      @title = title
       @disabled_till = disabled_till
       @converts = converts
     end
@@ -24,22 +24,22 @@ module Pili
     end
     
     def to_s
-      "#<#{self.class} #{@hub}/#{@key} disabled:#{disabled?} converts:#{@converts}>"
+      "#<#{self.class} #{@hub}/#{@title} disabled:#{disabled?} converts:#{@converts}>"
     end
     
     def to_json
-      {:hub=>@hub, :key=>@key, :disabled=>disabled?, :converts=>@converts}.to_json
+      {:hub=>@hub, :key=>@title, :disabled=>disabled?, :converts=>@converts}.to_json
     end
   end
 
   class Stream
-    attr_reader :hub, :key
+    attr_reader :hub, :title
     
-    def initialize(hub, key, client)
+    def initialize(hub, title, client)
       @hub = hub
-      @key = key
+      @title = title
       
-      ekey = Base64.urlsafe_encode64(key)
+      ekey = Base64.urlsafe_encode64(title)
       @base_url = "#{Config.api_base_url}/hubs/#{hub}/streams/#{ekey}"
       
       @client = client
@@ -48,7 +48,7 @@ module Pili
     # Info 获得流信息.
     def info
       ret = @client.rpc.call_with_json("GET", @base_url, nil)
-      StreamInfo.new @hub, @key, ret["disabledTill"], ret["converts"]
+      StreamInfo.new @hub, @title, ret["disabledTill"], ret["converts"]
     end
     
     # 无限期禁用一个流.
@@ -148,11 +148,11 @@ module Pili
     end
     
     def to_s
-      "#<#{self.class} #{@hub}/#{@key}>"
+      "#<#{self.class} #{@hub}/#{@title}>"
     end
     
     def to_json
-      {:hub=>@hub, :key=>@key}.to_json
+      {:hub=>@hub, :key=>@title}.to_json
     end
   end
 end

@@ -14,14 +14,14 @@ module Pili
     # 创建一个流对象.
     # 使用一个合法 rtmp_publish_url 发起推流就会自动创建流对象.
     # 一般情况下不需要调用这个 API, 除非是想提前对这一个流做一些特殊配置.    
-    def create(stream_key)
-      @client.rpc.call_with_json("POST", "#{@base_url}/streams", {:key => stream_key})
-      Stream.new(@hub, stream_key, @client)
+    def create(stream_title)
+      @client.rpc.call_with_json("POST", "#{@base_url}/streams", {:key => stream_title})
+      Stream.new(@hub, stream_title, @client)
     end
 
     # 初始化一个流对象.
-    def stream(stream_key)
-      Stream.new(@hub, stream_key, @client)
+    def stream(stream_title)
+      Stream.new(@hub, stream_title, @client)
     end
 
     def plist(opt = {})
@@ -47,8 +47,8 @@ module Pili
     #
     #   marker = ""
     #   while true
-    #     keys, marker = hub.list(:marker=> marker)
-    #     # do something with keys.
+    #     titles, marker = hub.list(:marker=> marker)
+    #     # do something with titles.
     #     if marker == ""
     #       break
     #     end
@@ -70,8 +70,8 @@ module Pili
     #
     #   marker = ""
     #   while true
-    #     keys, marker = hub.list_live(:marker=> marker)
-    #     # do something with keys.
+    #     titles, marker = hub.list_live(:marker=> marker)
+    #     # do something with titles.
     #     if marker == ""
     #       break
     #     end
