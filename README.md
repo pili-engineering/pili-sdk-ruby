@@ -16,12 +16,13 @@
 	- [x] 批量查询直播信息: hub.batch_query_live_status(stream_titles)
 - Stream
 	- [x] 流信息: stream.info()
-	- [x] 禁用流: stream.disable()
+	- [x] 无限期禁用流: stream.disable()
 	- [x] 禁用流: stream.disable_till(timestamp)
 	- [x] 启用流: stream.enable()
  	- [x] 查询直播状态: stream.live_status()
 	- [x] 保存直播回放: stream.saveas(...)
 	- [x] 保存直播截图: stream.snapshot(...)
+	- [x] 更改流的实时转码规格: stream.update_converts(profiles)
 	- [x] 查询直播历史: stream.history_activity(...)
 
 ## Contents
@@ -48,9 +49,10 @@
 		- [Disable a Stream with timestamp](#disable-a-stream-with-timestamp)
 		- [Enable a Stream](#enable-a-stream)
 		- [Get Stream live status](#get-stream-live-status)
-		- [Get Stream history activity](#get-stream-history-activity)
 		- [Save Stream live playback](#save-stream-live-playback)
 		- [Save Stream snapshot](#save-stream-snapshot)
+		- [Update converts](#update-converts)
+		- [Get Stream history activity](#get-stream-history-activity)
 
 ## Installation
 
@@ -241,14 +243,6 @@ puts(status.to_json)
 # {"startAt":1463022236,"clientIP":"222.73.202.226","bps":248,"fps":{"audio":45,"vedio":28,"data":0}}
 ```
 
-#### Get Stream history activity 
-
-```ruby
-activity = stream.history_activity()
-puts(activity.to_json)
-# [{"start":1463022236,"end":1463022518}]
-```
-
 #### Save Stream live playback
 
 ```ruby
@@ -262,3 +256,23 @@ puts(fname, persistentID)
 fname = stream.snapshot()
 puts(fname)
 # stream-title-4532162526321415963.jpg
+```
+
+#### Update converts
+
+```ruby
+stream = hub.stream("streamkey")
+puts stream.info.to_json
+stream.update_converts(["720p", "480p"])
+puts stream.info.to_json
+# {"hub":"PiliSDKTest","key":"streamkey","disabled":false,"converts":[]}
+# {"hub":"PiliSDKTest","key":"streamkey","disabled":false,"converts":["720p","480p"]}
+```
+
+#### Get Stream history activity 
+
+```ruby
+activity = stream.history_activity()
+puts(activity.to_json)
+# [{"start":1463022236,"end":1463022518}]
+```

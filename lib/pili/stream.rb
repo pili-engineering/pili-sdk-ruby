@@ -8,11 +8,15 @@ module Pili
     
     # 表示禁用结束的时间, 0 表示不禁用, -1 表示永久禁用.
     attr_reader :disabled_till
+
+    # 流转码配置数组
+    attr_reader :converts
   
-    def initialize(hub, key, disabled_till)
+    def initialize(hub, key, disabled_till, converts)
       @hub = hub
       @key = key
       @disabled_till = disabled_till
+      @converts = converts
     end
     
     def disabled?
@@ -20,11 +24,11 @@ module Pili
     end
     
     def to_s
-      "#<#{self.class} #{@hub}/#{@key} disabled:#{disabled?}>"
+      "#<#{self.class} #{@hub}/#{@key} disabled:#{disabled?} converts:#{@converts}>"
     end
     
     def to_json
-      {:hub=>@hub, :key=>@key, :disabled=>disabled?}.to_json
+      {:hub=>@hub, :key=>@key, :disabled=>disabled?, :converts=>@converts}.to_json
     end
   end
 
@@ -44,7 +48,7 @@ module Pili
     # Info 获得流信息.
     def info
       ret = @client.rpc.call_with_json("GET", @base_url, nil)
-      StreamInfo.new @hub, @key, ret["disabledTill"]
+      StreamInfo.new @hub, @key, ret["disabledTill"], ret["converts"]
     end
     
     # 无限期禁用一个流.
@@ -113,6 +117,15 @@ module Pili
     def snapshot(opt = {})
       ret = @client.rpc.call_with_json("POST", "#{@base_url}/snapshot", opt)
       ret["fname"]
+    end
+
+    # 修改流转码配置
+    #
+    # 参数：
+    #     profiles 字符串数组，元素为转码的分辨率如：720p, 480p
+    #
+    def update_converts(profiles)
+      ret = @client.rpc.call_with_json("POST", "#{@base_url}/converts", :converts => profiles)
     end
     
     # 查询直播历史.

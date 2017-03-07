@@ -89,6 +89,11 @@ rescue Pili::ResourceNotExist => e
   puts e
 end
 
+puts "更改流的实时转码规格"
+puts stream_a.info.to_json
+stream_a.update_converts(["720p", "480p"])
+puts stream_a.info.to_json
+
 puts "查询推流历史."
 activity = stream_a.history_activity()
 puts activity
