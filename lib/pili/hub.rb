@@ -14,14 +14,14 @@ module Pili
     # 创建一个流对象.
     # 使用一个合法 rtmp_publish_url 发起推流就会自动创建流对象.
     # 一般情况下不需要调用这个 API, 除非是想提前对这一个流做一些特殊配置.    
-    def create(stream_key)
-      @client.rpc.call_with_json("POST", "#{@base_url}/streams", {:key => stream_key})
-      Stream.new(@hub, stream_key, @client)
+    def create(stream_title)
+      @client.rpc.call_with_json("POST", "#{@base_url}/streams", {:key => stream_title})
+      Stream.new(@hub, stream_title, @client)
     end
 
     # 初始化一个流对象.
-    def stream(stream_key)
-      Stream.new(@hub, stream_key, @client)
+    def stream(stream_title)
+      Stream.new(@hub, stream_title, @client)
     end
 
     def plist(opt = {})
@@ -47,8 +47,8 @@ module Pili
     #
     #   marker = ""
     #   while true
-    #     keys, marker = hub.list(:marker=> marker)
-    #     # do something with keys.
+    #     titles, marker = hub.list(:marker=> marker)
+    #     # do something with titles.
     #     if marker == ""
     #       break
     #     end
@@ -70,8 +70,8 @@ module Pili
     #
     #   marker = ""
     #   while true
-    #     keys, marker = hub.list_live(:marker=> marker)
-    #     # do something with keys.
+    #     titles, marker = hub.list_live(:marker=> marker)
+    #     # do something with titles.
     #     if marker == ""
     #       break
     #     end
@@ -79,6 +79,34 @@ module Pili
     def list_live(opt = {})
       opt[:liveonly] = true
       plist(opt)
+    end
+
+    # 批量查询直播实时信息
+    #
+    # 参数：
+    #
+    # stream_titles 字符串数组，其中元素是想要查询的流的标题。
+    #
+    # 返回：
+    #
+    #   {
+    #     "key" => <String>, # 流标题
+    #     "startAt" => <Integer>, # 直播开始的 Unix 时间戳, 0 表示当前没在直播.
+    #     "clientIp" => <String>, # 直播的客户端 IP.
+    #     "bps" => <Integer>, # 直播的码率、帧率信息.
+    #     "fps" => {
+    #       "audio" => <Integer>,
+    #       "video" => <Integer>,
+    #       "data" => <Integer>
+    #     }
+    #   }
+    #
+    # 注意：
+    #
+    # 查询的流不存在或不在直播不会出现在返回结果里。
+    def batch_query_live_status(stream_titles)
+      ret = @client.rpc.call_with_json("POST", "#{@base_url}/livestreams", {:items=>stream_titles})
+      ret["items"]
     end
     
     def to_s
