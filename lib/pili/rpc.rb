@@ -10,7 +10,7 @@ module Pili
 
     def new_request(method, url, params = {})
       req = Typhoeus::Request.new(url, method: method.downcase.to_sym, ssl_verifypeer: false, ssl_verifyhost: 0)
-      if method.to_s.upcase == 'POST' && !params.nil?
+      if %w[POST PUT DELETE].include?(method.to_s.upcase)
         body = params.to_json
         req.options[:headers]['Content-Type'] = 'application/json'
         req.options[:headers]['Content-Length'] = body.length
