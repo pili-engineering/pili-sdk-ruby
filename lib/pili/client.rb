@@ -36,7 +36,7 @@ module Pili
         path = "/#{hub}/#{stream_title}.m3u8"
 
         sign = Digest::MD5.hexdigest(key + path + t).downcase
-        "http://#{domain}/#{path}?sign=#{sign}&t=#{t}"
+        "http://#{domain}#{path}?sign=#{sign}&t=#{t}"
       else
         "http://#{domain}/#{hub}/#{stream_title}.m3u8"
       end
