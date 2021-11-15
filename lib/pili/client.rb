@@ -29,8 +29,17 @@ module Pili
     end
 
     # 生成 HLS 直播地址.
-    def hls_play_url(domain, hub, stream_title)
-      "http://#{domain}/#{hub}/#{stream_title}.m3u8"
+    def hls_play_url(domain, hub, stream_title, key = '', expire_after_seconds = nil)
+      if expire_after_seconds
+        expire = Time.current.to_i + expire_after_seconds
+        t = expire.to_s(16).downcase
+        path = "/#{hub}/#{stream_title}.m3u8"
+
+        sign = Digest::MD5.hexdigest(key + path + t).downcase
+        "http://#{domain}/#{path}?sign=#{sign}&t=#{t}"
+      else
+        "http://#{domain}/#{hub}/#{stream_title}.m3u8"
+      end
     end
 
     # 生成 HDL 直播地址.
