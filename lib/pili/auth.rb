@@ -13,7 +13,7 @@ module Pili
     def sign(data)
       digest = OpenSSL::HMAC.digest(OpenSSL::Digest.new('sha1'), @secret_key, data)
       signature = Base64.urlsafe_encode64(digest)
-      "Qiniu #{@access_key}:#{signature}"
+      "#{@access_key}:#{signature}"
     end
 
     def inc_body(req, content_type)
@@ -42,7 +42,9 @@ module Pili
 
       data += req.options[:body].to_s if inc_body(req, content_type)
 
-      req.options[:headers][:Authorization] = sign(data)
+      authorization = sign(data)
+      authorization = "Qiniu #{authorization}" if uri.host.include?('pili-pub')
+      req.options[:headers][:Authorization] = authorization
       req
     end
   end
