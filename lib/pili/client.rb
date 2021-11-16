@@ -36,20 +36,20 @@ module Pili
         path = "/#{hub}/#{stream_title}.m3u8"
 
         sign = Digest::MD5.hexdigest(key + path + t).downcase
-        "http://#{domain}#{path}?sign=#{sign}&t=#{t}"
+        "https://#{domain}#{path}?sign=#{sign}&t=#{t}"
       else
-        "http://#{domain}/#{hub}/#{stream_title}.m3u8"
+        "https://#{domain}/#{hub}/#{stream_title}.m3u8"
       end
     end
 
     # 生成 HDL 直播地址.
     def hdl_play_url(domain, hub, stream_title)
-      "http://#{domain}/#{hub}/#{stream_title}.flv"
+      "https://#{domain}/#{hub}/#{stream_title}.flv"
     end
 
     # 生成截图直播地址.
     def snapshot_play_url(domain, hub, stream_title)
-      "http://#{domain}/#{hub}/#{stream_title}.jpg"
+      "https://#{domain}/#{hub}/#{stream_title}.jpg"
     end
   end
 end
